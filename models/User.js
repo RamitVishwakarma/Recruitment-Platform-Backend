@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
     required: false,
     unique: true,
@@ -34,14 +34,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     enum: ['1', '2'],
   },
-  admissionNo: {
+  admissionNumber: {
     type: String,
     required: true,
     unique: true,
-  },
-  avatar: {
-    type: String,
-    required: false
   },
   resume: {
     type: String, // Assuming you store the resume file path

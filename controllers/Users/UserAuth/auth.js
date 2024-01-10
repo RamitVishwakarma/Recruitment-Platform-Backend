@@ -8,7 +8,7 @@ const tokenBlacklist = new Set();
 
 router.post("/signup", async (req, res, next) => {
   try {
-    const { name, email, password, phoneNumber } = req.body;
+    const { name, email, password, admissionNumber, year, Domain } = req.body;
 
     // Check if user with the same email already exists
     const existingUser = await User.findOne({ email });
@@ -21,7 +21,14 @@ router.post("/signup", async (req, res, next) => {
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
     // Create a new user instance
-    const newUser = new User({ name, email, password: hashedPassword, phoneNumber });
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      admissionNumber,
+      year,
+      Domain
+    });
 
     // Save the new user to the database
     await newUser.save();
@@ -72,25 +79,25 @@ router.post('/login', async (req, res, next) => {
 
 
 router.post("/logout", (req, res) => {
-    try {
-      const authHeader = req.headers["authorization"];
-      
-      // Extract the token from the Authorization header
-      const token = authHeader && authHeader.split(' ')[1];
-  
-      if (!token) {
-        return res.status(400).json({ success: false, msg: 'No token provided' });
-      }
-  
-      // Add the token to the blacklist
-      tokenBlacklist.add(token);
-  
-      res.status(200).json({ success: true, msg: 'You have been logged out' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, msg: 'Error during logout' });
+  try {
+    const authHeader = req.headers["authorization"];
+
+    // Extract the token from the Authorization header
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      return res.status(400).json({ success: false, msg: 'No token provided' });
     }
-  });
-  
+
+    // Add the token to the blacklist
+    tokenBlacklist.add(token);
+
+    res.status(200).json({ success: true, msg: 'You have been logged out' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, msg: 'Error during logout' });
+  }
+});
+
 
 module.exports = router;
