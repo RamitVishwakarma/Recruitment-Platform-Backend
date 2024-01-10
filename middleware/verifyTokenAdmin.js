@@ -11,7 +11,7 @@ const verifyToken=(req,res,next)=>{
        
        token= req.headers.authorization.split(" ")[1]
         // console.log(token);
-        jwt.verify(token,process.env.jJWT_SECRETAdmin,(error,user)=>{
+        jwt.verify(token,process.env.JWT_SECRETAdmin,(error,user)=>{
             if(error){
                 res.status(400).json({ success: false, message: "Token is not valid" });
                 

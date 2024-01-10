@@ -1,5 +1,5 @@
 const express = require('express');
-const AdminAuthRoute = require("../../controllers/Admins/AdminAuth/Auth.js");
+const AdminAuthRoute = require("../../controllers/Admins/Auth/Auth.js");
 // const AdminPropertiesRoute = require("../../Controllers/Admin/Properties.js");
 const AdminProfileRoute = require("../../controllers/Admins/admin.js");
 const verifyToken = require('../../middleware/verifyTokenAdmin.js');

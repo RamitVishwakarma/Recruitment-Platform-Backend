@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
     },
     linkedin: {
       type: String,
-      required: true
+      required: false
     },
     behance: {
       type: String,

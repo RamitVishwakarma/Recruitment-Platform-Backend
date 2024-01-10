@@ -1,5 +1,5 @@
 const express = require('express');
-const userAuthRoute = require("../../controllers/Users/UserAuth/auth.js")
+const userAuthRoute = require("../../controllers/Users/Auth/auth.js")
 // const userListingRoute = require("../../Controllers/User/listing");
 const userProfileRoute = require("../../controllers/Users/user.js");
 const verifyToken = require('../../middleware/verifyTokenUser.js');

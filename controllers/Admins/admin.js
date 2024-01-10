@@ -27,12 +27,8 @@ router.put("/myprofile", async (req, res) => {
 
         const updatedUser = await Admin.findByIdAndUpdate(id, {
             name: req.body.name,
-            phoneNumber: req.body.phoneNumber,
             photo: req.body.photo,
-            resume: req.body.resume,
-            github: req.body.github,
-            linkedin: req.body.linkedin,
-            admissionNumber: req.body.admissionNumber,
+            phoneNumber: req.body.phoneNumber,
             phoneNumber: req.body.phoneNumber,
         });
 
@@ -53,16 +49,20 @@ router.get('/listUsers', async (req, res) => {
     try {
       const adminId = req.user._id;
       const admin = await Admin.findById(adminId);
-  
+      
       if (!admin) {
         return res.status(404).json({ success: false, message: "Admin not found" });
       }
-  
+   
       // Assuming 'domain' is a field in the Admin model
       const domain = admin.Domain;
+      // const domain = "Programmming";
+      // console.log(domain)
   
       // Fetch users based on the admin's domain
-      const userList = await User.find({ domain });
+      // const userList = await User.find();
+      const userList = await User.find({ Domain: domain });
+      console.log(userList)
   
       res.status(200).json(userList);
     } catch (error) {
@@ -98,7 +98,7 @@ router.get("/findUser/:id", async (req, res) => {
   });
   
 // shorlisting user
-  router.put('/shortlistUser/:userId', async (req, res) => {
+  router.put('/shortlistUser/:id', async (req, res) => {
     try {
       // Check if the logged-in user is an admin
       const adminId = req.user._id;
@@ -110,21 +110,27 @@ router.get("/findUser/:id", async (req, res) => {
   
       // Get the user ID from the request parameters
       const userId = req.params.id;
-  
-      // Check if the user exists
       const user = await User.findById(userId);
+      
   
       if (!user) {
         return res.status(404).json({ success: false, message: "User not found" });
       }
   
+
       // Update the 'shortlisted' field to true
-      User.ShortList = true;
-  
+      ShortListed = req.body.ShortList;
       // Save the updated user
-      await user.save();
+      let Updateuser = await User.findByIdAndUpdate(userId, {
+        ShortList: ShortListed
+    }, {
+        new: true
+    })
+    const { password, ...others } = Updateuser._doc;
   
-      res.status(200).json({ success: true, message: "User shortlisted successfully" });
+      // res.status(200).json({ success: true, message: "User shortlisted successfully" });
+      res.status(200).json({ success: true, message: `user account verified set to ${ShortListed}`, result: others });
+      // console.log(Updateuser)
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, message: "Error shortlisting user" });

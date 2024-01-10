@@ -33,10 +33,11 @@ router.put("/myprofile", async (req, res) => {
             phoneNumber: req.body.phoneNumber,
             photo: req.body.photo,
             resume: req.body.resume,
-            github: req.body.github,
-            linkedin: req.body.linkedin,
+            year:req.body.year,
+            Domain:req.body.Domain,
             admissionNumber: req.body.admissionNumber,
             phoneNumber: req.body.phoneNumber,
+            socialLinks:req.body.socialLinks
         });
 
         if (updatedUser) {
