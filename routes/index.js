@@ -8,4 +8,15 @@ router.get("/", (req, res) => {
 })
 
 
+// importing files.
+const UserRoute = require("./User/index.js");
+const AdminRoute = require("./Admin/index.js");
+
+
+// user
+router.use("/api/user", UserRoute)
+// auth
+router.use("/api/admin", AdminRoute);
+
+
 module.exports = router;

@@ -15,17 +15,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  photo:{
-    type:String,
-    required:false
+  phoneNumber: {
+    type: Number,
+    required: false,
+  },
+  photo: {
+    type: String,
+    required: false
     // default:"no photo"
-},
-Domain: {
+  },
+  Domain: {
     type: String,
     required: true,
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
-year: {
+  year: {
     type: String,
     required: true,
     enum: ['1', '2'],
@@ -38,8 +42,8 @@ year: {
   avatar: {
     type: String,
     required: false
-},
-resume: {
+  },
+  resume: {
     type: String, // Assuming you store the resume file path
     validate: {
       validator: function (value) {
@@ -52,24 +56,31 @@ resume: {
   socialLinks: {
     github: {
       type: String,
+      required: false
     },
     linkedin: {
       type: String,
+      required: true
     },
     behance: {
       type: String,
+      required: false
     },
     hackerrank: {
       type: String,
+      required: false
     },
     Leetcode: {
       type: String,
+      required: false
     },
     Dribble: {
       type: String,
+      required: false
     },
     portfolio: {
       type: String,
+      required: false
     },
   },
   quizzesTaken: [{
@@ -82,7 +93,7 @@ resume: {
       default: 0,
     },
   }],
-},{ timestamps: true });
+}, { timestamps: true });
 
 const UserModel = mongoose.model('User', userSchema);
 

@@ -1,0 +1,96 @@
+const router = require("express").Router();
+const User = require('../../../models/User.js');
+const { errorHandler } = require('../../../utils/error.js')
+const bcryptjs = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const tokenBlacklist = new Set();
+
+
+router.post("/signup", async (req, res, next) => {
+  try {
+    const { name, email, password, phoneNumber } = req.body;
+
+    // Check if user with the same email already exists
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'User with this email already exists' });
+    }
+
+    // Hash the password before saving to the database
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    // Create a new user instance
+    const newUser = new User({ name, email, password: hashedPassword, phoneNumber });
+
+    // Save the new user to the database
+    await newUser.save();
+
+    // Respond with a success message
+    res.status(201).json({ success: true, message: 'User created successfully!' });
+  } catch (error) {
+    // Handle errors using the provided error handler
+    next(errorHandler(500, 'Error during user registration'));
+  }
+});
+
+
+
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user with the given email exists
+    const validUser = await User.findOne({ email });
+
+    if (!validUser) {
+      return next(errorHandler(404, 'User not found!'));
+    }
+
+    // Check if the password is valid
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
+
+    if (!validPassword) {
+      return next(errorHandler(401, 'Wrong credentials!'));
+    }
+
+    // Generate JWT token for authentication
+    const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser);
+
+    // Remove password from the user data before sending it in the response
+    const { password: _, ...userData } = validUser._doc;
+
+    res
+      .header('Authorization', 'Bearer ' + token)
+      .status(200)
+      .json(userData);
+  } catch (error) {
+    next(errorHandler(500, 'Error during user login'));
+  }
+});
+
+
+
+router.post("/logout", (req, res) => {
+    try {
+      const authHeader = req.headers["authorization"];
+      
+      // Extract the token from the Authorization header
+      const token = authHeader && authHeader.split(' ')[1];
+  
+      if (!token) {
+        return res.status(400).json({ success: false, msg: 'No token provided' });
+      }
+  
+      // Add the token to the blacklist
+      tokenBlacklist.add(token);
+  
+      res.status(200).json({ success: true, msg: 'You have been logged out' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, msg: 'Error during logout' });
+    }
+  });
+  
+
+module.exports = router;
