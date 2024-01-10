@@ -79,6 +79,11 @@ const userSchema = new mongoose.Schema({
       required: false
     },
   },
+  ShortList:{
+    type: Boolean,
+    required: false,
+    default:  false
+  },
   quizzesTaken: [{
     quizId: {
       type: mongoose.Schema.Types.ObjectId,

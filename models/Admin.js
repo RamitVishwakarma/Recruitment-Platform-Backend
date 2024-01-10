@@ -15,6 +15,11 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Domain:{
+    type: String,
+    required: true,
+    enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
+  },
   createdQuizzes: [{
     quizId: {
       type: mongoose.Schema.Types.ObjectId,

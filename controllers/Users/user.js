@@ -53,7 +53,7 @@ router.put("/myprofile", async (req, res) => {
 
 // user Deletion
 router.get('/delete/:id', async (req, res, next) => {
-    if (req.user._id !== req.params._id)
+    if (req.user._id !== req.params.id)
         return next(errorHandler(401, 'You can only delete your own account!'));
     try {
         await User.findByIdAndDelete(req.params.id);
