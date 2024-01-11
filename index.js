@@ -23,6 +23,8 @@ app.use(fileUpload({
 
 app.use("/public",express.static("public"));
 app.use(express.json());
+// Include express.urlencoded() middleware
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 
