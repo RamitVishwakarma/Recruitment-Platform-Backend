@@ -18,7 +18,7 @@ connectdb(DATABASE_URL);
 //
 app.use(fileUpload({
     useTempFiles : true,
-    limits: { fileSize: 2 * 1024 * 1024 },
+    limits: { fileSize: 2 * 1024 * 1024 }, // Set the limit to 2MB
 }));
 
 app.use("/public",express.static("public"));
