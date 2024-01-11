@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 const fileUpload = require('express-fileupload')
 dotenv.config();
 
-const port = process.env.PORT || 80;
+const PORT = process.env.PORT || 80;
 const app = express();
 // database start
 const mongoose = require("mongoose");
@@ -32,11 +32,11 @@ app.use(cors());
 const homeRoute = require("./routes/index.js");
 app.use("/", homeRoute);
 
-app.listen(port, (error) => {
+app.listen(PORT, (error) => {
     if (error) {
         console.log("server not started");
     } else {
-        console.log(`server running at http://localhost:${port}`);
+        console.log(`server running at http://localhost:${PORT}`);
 
 
     }
