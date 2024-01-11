@@ -17,6 +17,8 @@ const verifyToken=(req,res,next)=>{
                 
             }else{
                 req.user=user;
+                // console.log(req.user)
+                // console.log(req.user.isAdmin)
                 next();
             }
         });

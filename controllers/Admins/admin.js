@@ -4,7 +4,7 @@ const User = require('../../models/User');
 const router = express.Router();
 const Upload = require("../../helpers/uploadFile.js");
 
-// get Admin Details
+// show Admin Profile
 router.get('/myprofile', async (req, res, next) => {
   try {
     id = await req.user._id;
@@ -20,13 +20,15 @@ router.get('/myprofile', async (req, res, next) => {
   }
 });
 
-// User Admin Update
+// Admin Update
 
 router.put("/myprofile", async (req, res) => {
   try {
-    if (!req.files || !req.files.photo) {
-      return res.status(400).json({ success: false, message: "No file provided" });
+    // Admin Access Required
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
     }
+
     // uploading files to cloudinary
     const file = req.files.photo;
     const upload = await Upload.uploadFile(file, 'AdminImages');
@@ -70,6 +72,11 @@ router.put("/myprofile", async (req, res) => {
 // list of all users of its Domain
 router.get('/listUsers', async (req, res) => {
   try {
+
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+
     const adminId = req.user._id;
     const admin = await Admin.findById(adminId);
 
@@ -123,6 +130,12 @@ router.get("/findUser/:id", async (req, res) => {
 // shorlisting user
 router.put('/shortlistUser/:id', async (req, res) => {
   try {
+
+     // Admin Access Required
+     if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+
     // Check if the logged-in user is an admin
     const adminId = req.user._id;
     const admin = await Admin.findById(adminId);
@@ -165,6 +178,11 @@ router.put('/shortlistUser/:id', async (req, res) => {
 // list of all shortlisted users of its Domain
 router.get('/shortlistUser', async (req, res) => {
   try {
+     // Admin Access Required
+     if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+    
     const adminId = req.user._id;
     const admin = await Admin.findById(adminId);
 

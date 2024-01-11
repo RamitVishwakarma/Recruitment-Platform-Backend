@@ -28,6 +28,10 @@ const adminSchema = new mongoose.Schema({
     required: true,
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
+  isAdmin:{
+    type: Boolean,
+    default: false, 
+  },
   createdQuizzes: [{
     quizId: {
       type: mongoose.Schema.Types.ObjectId,

@@ -2,18 +2,16 @@
 const mongoose = require('mongoose');
 
 const projectSubmissionSchema = new mongoose.Schema({
-    // Define the properties for project submission as needed
-    // For example:
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Assuming there is a User model, adjust as needed
+      ref: 'User',             // User model
       required: true,
     },
-    submissionText: {
+    submissionLink: {
       type: String,
       required: true,
     },
-    // Add more properties as needed
+
   }, { timestamps: true });
 
 

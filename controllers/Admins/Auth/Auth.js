@@ -53,6 +53,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({
       _id: validUser._id, // Corrected from 'user' to 'validUser'
+      isAdmin:validUser.isAdmin
     }, process.env.JWT_SECRETAdmin, {
       expiresIn: "3d"
     });
