@@ -105,26 +105,33 @@ router.put("/myprofile", async (req, res) => {
                 console.error(err);
                 return res.status(500).json({ success: false, message: "Error moving file to local directory" });
             }
-
-            // Update user profile in the database
-            const id = req.user._id;
-            const updatedUser = await User.findByIdAndUpdate(id, {
-                name: req.body.name,
-                phoneNumber: req.body.phoneNumber,
-                photo: uploadedFile,
-                resume: uploadedFileResume,
-                year: req.body.year,
-                domain: req.body.Domain,
-                admissionNumber: req.body.admissionNumber,
-                socialLinks: req.body.socialLinks
-            }, { new: true });
-
-            if (updatedUser) {
-                res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
-            } else {
-                res.status(404).json({ success: false, message: "User not found" });
+        });
+        // Move file to local directory
+        resume.mv(`./public/UserResumeImages/${uploadedResumeName}`, async (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ success: false, message: "Error moving file to local directory" });
             }
         });
+        // Update user profile in the database
+        const id = req.user._id;
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            name: req.body.name,
+            phoneNumber: req.body.phoneNumber,
+            photo: uploadedFile,
+            resume: uploadedFileResume,
+            year: req.body.year,
+            domain: req.body.Domain,
+            admissionNumber: req.body.admissionNumber,
+            socialLinks: req.body.socialLinks
+        }, { new: true });
+
+        if (updatedUser) {
+            res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+        } else {
+            res.status(404).json({ success: false, message: "User not found" });
+        }
+
 
 
     } catch (error) {
