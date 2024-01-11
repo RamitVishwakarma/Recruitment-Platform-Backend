@@ -21,6 +21,7 @@ app.use(fileUpload({
     limits: { fileSize: 2 * 1024 * 1024 },
 }));
 
+app.use("/public",express.static("public"));
 app.use(express.json());
 app.use(cors());
 
