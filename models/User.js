@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     required: false
     // default:"no photo"
   },
-  Domain: {
+  domain: {
     type: String,
     required: true,
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],

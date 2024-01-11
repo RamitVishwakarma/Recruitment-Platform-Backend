@@ -114,7 +114,7 @@ router.put("/myprofile", async (req, res) => {
                 photo: uploadedFile,
                 resume: uploadedFileResume,
                 year: req.body.year,
-                Domain: req.body.Domain,
+                domain: req.body.Domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
             }, { new: true });
