@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const fileUpload = require('express-fileupload')
 dotenv.config();
 
 const port = process.env.PORT || 80;
@@ -13,6 +14,12 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const connectdb = require("./database/database.js");
 connectdb(DATABASE_URL);
 // database end
+
+//
+app.use(fileUpload({
+    useTempFiles : true,
+    limits: { fileSize: 2 * 1024 * 1024 },
+}));
 
 app.use(express.json());
 app.use(cors());

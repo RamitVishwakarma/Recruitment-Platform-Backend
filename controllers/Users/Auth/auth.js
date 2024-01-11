@@ -64,7 +64,7 @@ router.post('/login', async (req, res, next) => {
 
     // Generate JWT token for authentication
     const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser);
-
+    
     // Remove password from the user data before sending it in the response
     const { password: _, ...userData } = validUser._doc;
 

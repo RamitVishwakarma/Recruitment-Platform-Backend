@@ -15,6 +15,10 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  phoneNumber: {
+    type: Number,
+    required: false,
+  },
   Domain:{
     type: String,
     required: true,
