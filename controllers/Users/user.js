@@ -90,41 +90,50 @@ router.put("/myprofile", async (req, res) => {
         // Uploading file to Cloudinary
         const cloudinaryUpload = await Upload.uploadFile(file, 'ProfileImages');
         const uploadedFile = cloudinaryUpload.secure_url;
-        const cloudinaryUploadResume = await Upload.uploadFile(resume,'ResumeImages');
+        const cloudinaryUploadResume = await Upload.uploadFile(resume, 'ResumeImages');
         const uploadedFileResume = cloudinaryUploadResume.secure_url;
-        
-        const uploadedFileName = file.name;
 
+        const uploadedProfileName = file.name;
+        const uploadedResumeName = resume.name;
         if (!uploadedFile) {
             return res.status(400).json({ success: false, message: "File not uploaded" });
         }
 
         // Move file to local directory
-        file.mv(`./public/UserProfileImages/${uploadedFileName}`, async (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ success: false, message: "Error moving file to local directory" });
-            }
+        if (uploadedProfileName) {
+            file.mv(`./public/UserProfileImages/${uploadedProfileName}`, async (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, message: "Error moving file to local directory" });
+                }
 
-            // Update user profile in the database
-            const id = req.user._id;
-            const updatedUser = await User.findByIdAndUpdate(id, {
-                name: req.body.name,
-                phoneNumber: req.body.phoneNumber,
-                photo: uploadedFile,
-                resume: uploadedFileResume,
-                year: req.body.year,
-                Domain: req.body.Domain,
-                admissionNumber: req.body.admissionNumber,
-                socialLinks: req.body.socialLinks
-            }, { new: true });
+                // Update user profile in the database
+                const id = req.user._id;
+                const updatedUser = await User.findByIdAndUpdate(id, {
+                    name: req.body.name,
+                    phoneNumber: req.body.phoneNumber,
+                    photo: uploadedFile,
+                    resume: uploadedFileResume,
+                    year: req.body.year,
+                    Domain: req.body.Domain,
+                    admissionNumber: req.body.admissionNumber,
+                    socialLinks: req.body.socialLinks
+                }, { new: true });
 
-            if (updatedUser) {
-                res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
-            } else {
-                res.status(404).json({ success: false, message: "User not found" });
-            }
-        });
+                if (updatedUser) {
+                    res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+                } else {
+                    res.status(404).json({ success: false, message: "User not found" });
+                }
+            });
+        } else {
+            file.mv(`./public/UserResumeImages/${uploadedResumeName}`, async (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, message: "Error moving file to local directory" });
+                }
+            })
+        }
 
     } catch (error) {
         console.error(error);
