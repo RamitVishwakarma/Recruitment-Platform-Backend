@@ -40,15 +40,19 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   resume: {
-    type: String, // Assuming you store the resume file path
-    validate: {
-      validator: function (value) {
-        // Regular expression for checking file extensions (PDF or DOCX)
-        return /\.(pdf|docx)$/i.test(value);
-      },
-      message: 'Resume must be in PDF or DOCX format',
-    },
+    type: String,
+    required: false
   },
+  // resume: {
+  //   type: String, // Assuming you store the resume file path
+  //   validate: {
+  //     validator: function (value) {
+  //       // Regular expression for checking file extensions (PDF or DOCX)
+  //       return /\.(pdf|docx)$/i.test(value);
+  //     },
+  //     message: 'Resume must be in PDF or DOCX format',
+  //   },
+  // },
   socialLinks: {
     github: {
       type: String,
@@ -79,10 +83,10 @@ const userSchema = new mongoose.Schema({
       required: false
     },
   },
-  ShortList:{
+  ShortList: {
     type: Boolean,
     required: false,
-    default:  false
+    default: false
   },
   quizzesTaken: [{
     quizId: {
