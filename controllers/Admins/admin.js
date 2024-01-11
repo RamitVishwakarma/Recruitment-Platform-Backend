@@ -24,35 +24,41 @@ router.get('/myprofile', async (req, res, next) => {
 
 router.put("/myprofile", async (req, res) => {
   try {
-
+    if (!req.files || !req.files.photo) {
+      return res.status(400).json({ success: false, message: "No file provided" });
+    }
     // uploading files to cloudinary
     const file = req.files.photo;
     const upload = await Upload.uploadFile(file);
     const UploadedFile = upload.secure_url;
-
+    const uploadedFileName = file.name;
     // console.log(upload.secure_url);
     // console.log(UploadedFile);
-    if (UploadedFile) {
+    if (!UploadedFile) {
+      return res.status(400).json({ success: false, message: "File not uploaded" });
+    }
 
-
+    file.mv(`./public/AdminProfileImage/${uploadedFileName}`, async (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "Error moving file to local directory" });
+      }
       const id = req.user._id; // getting user id form the jwt encryption
-
+      // console.log(UploadedFile)
       const updatedUser = await Admin.findByIdAndUpdate(id, {
         name: req.body.name,
-        email:req.body.email,
+        email: req.body.email,
         photo: UploadedFile,
         phoneNumber: req.body.phoneNumber,
-        Domain:req.body.Domain
-      });
+        Domain: req.body.Domain
+      }, { new: true });
 
       if (updatedUser) {
-        res.status(200).json({ success: true, message: "User profile updated successfully" });
+        res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
       } else {
         res.status(404).json({ success: false, message: "User not found" });
       }
-    } else {
-      res.status(404).json({ success: false, message: "User Image not Found" })
-    }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "User profile not updated" });

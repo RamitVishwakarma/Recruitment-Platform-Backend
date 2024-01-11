@@ -19,6 +19,10 @@ const adminSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
+  photo: {
+    type: String,
+    required: false,
+  },
   Domain:{
     type: String,
     required: true,

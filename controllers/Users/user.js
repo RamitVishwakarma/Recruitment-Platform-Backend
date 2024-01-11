@@ -25,40 +25,103 @@ router.get('/myprofile', async (req, res, next) => {
 
 
 // User profile Update
+// not in use
+// router.put("/myprofile", async (req, res) => {
+//     try {
+
+//         // uploading files to cloudinary
+//         const file = req.files.photo;
+//         // console.log(file.name)
+//         const upload = await Upload.uploadFile(file);
+//         const UploadedFile = upload.secure_url;
+//         // console.log(upload)
+
+//         if (file) {
+//             const UploadedFileName = file.name;
+//             file.mv('../../public/ProfileImages' + UploadedFileName, (err) => {
+//                 if (err) {
+//                     res.send(err);
+//                 }else{
+//                     res.send("File Uploaded")
+//                 }
+//             })
+
+//         }
+
+//         if (UploadedFile) {
+//             const id = req.user._id; // getting user id form the jwt encryption
+
+//             const updatedUser = await User.findByIdAndUpdate(id, {
+//                 name: req.body.name,
+//                 phoneNumber: req.body.phoneNumber,
+//                 photo: UploadedFile,
+//                 resume: req.body.resume,
+//                 year: req.body.year,
+//                 Domain: req.body.Domain,
+//                 admissionNumber: req.body.admissionNumber,
+//                 phoneNumber: req.body.phoneNumber,
+//                 socialLinks: req.body.socialLinks
+//             }, { new: true });
+//             if (updatedUser) {
+//                 res.status(200).json({ success: true, message: "User profile updated successfully" });
+//             } else {
+//                 res.status(404).json({ success: false, message: "User not found" });
+//             }
+//         } else {
+//             res.status(404).json({ success: false, message: "User Image not Found" })
+//         }
+
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "User profile not updated" });
+//     }
+// });
 
 router.put("/myprofile", async (req, res) => {
     try {
+        // Check if a file is provided
+        if (!req.files || !req.files.photo) {
+            return res.status(400).json({ success: false, message: "No file provided" });
+        }
 
-        // uploading files to cloudinary
         const file = req.files.photo;
-        const upload = await Upload.uploadFile(file);
-        const UploadedFile = upload.secure_url;
 
-        // console.log(upload.secure_url);
-        // console.log(UploadedFile);
+        // Uploading file to Cloudinary
+        const cloudinaryUpload = await Upload.uploadFile(file);
+        const uploadedFile = cloudinaryUpload.secure_url;
 
-        if (UploadedFile) {
-            const id = req.user._id; // getting user id form the jwt encryption
+        const uploadedFileName = file.name;
 
+        if (!uploadedFile) {
+            return res.status(400).json({ success: false, message: "File not uploaded" });
+        }
+
+        // Move file to local directory
+        file.mv(`./public/UserProfileImages/${uploadedFileName}`, async (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ success: false, message: "Error moving file to local directory" });
+            }
+
+            // Update user profile in the database
+            const id = req.user._id;
             const updatedUser = await User.findByIdAndUpdate(id, {
                 name: req.body.name,
                 phoneNumber: req.body.phoneNumber,
-                photo: UploadedFile,
+                photo: uploadedFile,
                 resume: req.body.resume,
                 year: req.body.year,
                 Domain: req.body.Domain,
                 admissionNumber: req.body.admissionNumber,
-                phoneNumber: req.body.phoneNumber,
                 socialLinks: req.body.socialLinks
             }, { new: true });
+
             if (updatedUser) {
-                res.status(200).json({ success: true, message: "User profile updated successfully" });
+                res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
             } else {
                 res.status(404).json({ success: false, message: "User not found" });
             }
-        } else {
-            res.status(404).json({ success: false, message: "User Image not Found" })
-        }
+        });
 
     } catch (error) {
         console.error(error);
