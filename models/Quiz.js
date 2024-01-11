@@ -45,10 +45,6 @@ const quizSchema = new mongoose.Schema({
     required: true,
   },
 
-  projectLink: {
-    type: String,
-    required: false,
-  }
 });
 
 const QuizModel = mongoose.model('Quiz', quizSchema);
