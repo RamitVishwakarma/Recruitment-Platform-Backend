@@ -8,13 +8,16 @@ cloudinary.config({
     secure: true
 });
 
-const uploadFile = async (file) => {
+const uploadFile = async (file, FolderName) => {
 
     try {
 
         const uploadAsync = promisify(cloudinary.uploader.upload);
-        const result = await uploadAsync(file.tempFilePath);
-        // const uploadedFile = result.secure_url;
+        const options = {
+            folder: `${FolderName}`, // Add the folder name here
+        };
+
+        const result = await uploadAsync(file.tempFilePath, options);
         const uploadedFile = result;
         return uploadedFile;
 

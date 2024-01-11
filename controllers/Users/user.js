@@ -85,11 +85,14 @@ router.put("/myprofile", async (req, res) => {
         }
 
         const file = req.files.photo;
+        const resume = req.files.resume;
 
         // Uploading file to Cloudinary
-        const cloudinaryUpload = await Upload.uploadFile(file);
+        const cloudinaryUpload = await Upload.uploadFile(file, 'ProfileImages');
         const uploadedFile = cloudinaryUpload.secure_url;
-
+        const cloudinaryUploadResume = await Upload.uploadFile(resume,'ResumeImages');
+        const uploadedFileResume = cloudinaryUploadResume.secure_url;
+        
         const uploadedFileName = file.name;
 
         if (!uploadedFile) {
@@ -109,7 +112,7 @@ router.put("/myprofile", async (req, res) => {
                 name: req.body.name,
                 phoneNumber: req.body.phoneNumber,
                 photo: uploadedFile,
-                resume: req.body.resume,
+                resume: uploadedFileResume,
                 year: req.body.year,
                 Domain: req.body.Domain,
                 admissionNumber: req.body.admissionNumber,

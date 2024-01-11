@@ -29,7 +29,7 @@ router.put("/myprofile", async (req, res) => {
     }
     // uploading files to cloudinary
     const file = req.files.photo;
-    const upload = await Upload.uploadFile(file);
+    const upload = await Upload.uploadFile(file,'AdminImages');
     const UploadedFile = upload.secure_url;
     const uploadedFileName = file.name;
     // console.log(upload.secure_url);
