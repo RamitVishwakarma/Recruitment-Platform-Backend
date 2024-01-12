@@ -249,10 +249,13 @@ router.get('/statistics', async (req, res) => {
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-    
+
     const domain = admin.Domain;
     // number of submitted projects
-    const submittedProjectsCount = await ProjectSubmission.countDocuments();
+    const submittedProject = await ProjectSubmission.find({}).populate({ path: "userId", select: "name Domain" });
+    const submittedProjectsCount = submittedProject.filter(project => project.userId.Domain === domain).length;
+    // console.log('Submitted Projects Count:', submittedProjectsCount);
+    // console.log(submittedProject)
 
     //number of registered users
     const registeredUsersCount = await User.find({ Domain: domain }).countDocuments();
