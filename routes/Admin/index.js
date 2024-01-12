@@ -2,7 +2,7 @@ const express = require('express');
 const AdminAuthRoute = require("../../controllers/Admins/Auth/Auth.js");
 // const AdminPropertiesRoute = require("../../Controllers/Admin/Properties.js");
 const AdminProfileRoute = require("../../controllers/Admins/admin.js");
-const ProjectRoute = require("../../controllers/Admins/Project/Project.js");
+const ProjectRoute = require("../../controllers/Admins/Project/ProjectList.js");
 const verifyToken = require('../../middleware/verifyTokenAdmin.js');
 
 const router = express.Router();
