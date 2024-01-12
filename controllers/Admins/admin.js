@@ -83,7 +83,7 @@ router.get('/listUsers', async (req, res) => {
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
- 
+
     const domain = admin.Domain;
     // const domain = "Programmming";
     // console.log(domain)
@@ -91,7 +91,7 @@ router.get('/listUsers', async (req, res) => {
     // Fetch users based on the admin's domain
     // const userList = await User.find();
     const userList = await User.find({ Domain: domain });
-    console.log(userList)
+    // console.log(userList)
 
     res.status(200).json(userList);
   } catch (error) {
@@ -99,8 +99,10 @@ router.get('/listUsers', async (req, res) => {
     res.status(500).json({ success: false, message: "Error retrieving user list" });
   }
 });
+
+
 // list of all users by year and domain
-router.get('/listUsers/:id', async (req, res) => {
+router.get('/listUsers/:id', async (req, res) => {  // passing year in id
   try {
 
     if (!req.user.isAdmin) {
@@ -113,7 +115,7 @@ router.get('/listUsers/:id', async (req, res) => {
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-  
+
     const domain = admin.Domain;
     // const domain = "Programmming";
     // console.log(domain)
@@ -121,7 +123,7 @@ router.get('/listUsers/:id', async (req, res) => {
     // Fetch users based on the admin's domain
     // const userList = await User.find();
     const userList = await User.find({ Domain: domain, year: userId });
-    console.log(userList)
+    // console.log(userList)
 
     res.status(200).json(userList);
   } catch (error) {
