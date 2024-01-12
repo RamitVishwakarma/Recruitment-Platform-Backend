@@ -83,8 +83,7 @@ router.get('/listUsers', async (req, res) => {
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-
-    // Assuming 'domain' is a field in the Admin model
+ 
     const domain = admin.Domain;
     // const domain = "Programmming";
     // console.log(domain)
@@ -92,6 +91,36 @@ router.get('/listUsers', async (req, res) => {
     // Fetch users based on the admin's domain
     // const userList = await User.find();
     const userList = await User.find({ Domain: domain });
+    console.log(userList)
+
+    res.status(200).json(userList);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error retrieving user list" });
+  }
+});
+// list of all users by year and domain
+router.get('/listUsers/:id', async (req, res) => {
+  try {
+
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+
+    const adminId = req.user._id;
+    const admin = await Admin.findById(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+  
+    const domain = admin.Domain;
+    // const domain = "Programmming";
+    // console.log(domain)
+    const userId = req.params.id;
+    // Fetch users based on the admin's domain
+    // const userList = await User.find();
+    const userList = await User.find({ Domain: domain, year: userId });
     console.log(userList)
 
     res.status(200).json(userList);
@@ -131,8 +160,8 @@ router.get("/findUser/:id", async (req, res) => {
 router.put('/shortlistUser/:id', async (req, res) => {
   try {
 
-     // Admin Access Required
-     if (!req.user.isAdmin) {
+    // Admin Access Required
+    if (!req.user.isAdmin) {
       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
     }
 
@@ -178,11 +207,11 @@ router.put('/shortlistUser/:id', async (req, res) => {
 // list of all shortlisted users of its Domain
 router.get('/shortlistUser', async (req, res) => {
   try {
-     // Admin Access Required
-     if (!req.user.isAdmin) {
+    // Admin Access Required
+    if (!req.user.isAdmin) {
       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
     }
-    
+
     const adminId = req.user._id;
     const admin = await Admin.findById(adminId);
 
