@@ -1,8 +1,11 @@
 const express = require('express');
 const Admin = require('../../models/Admin');
 const User = require('../../models/User');
+const ProjectSubmission = require('../../models/ProjectSubmission.js');
 const router = express.Router();
 const Upload = require("../../helpers/uploadFile.js");
+
+
 
 // show Admin Profile
 router.get('/myprofile', async (req, res, next) => {
@@ -222,12 +225,49 @@ router.get('/shortlistUser', async (req, res) => {
     }
     const domain = admin.Domain;
     // Fetch all shortlisted users
-    const shortlistedUsers = await User.find({Domain:domain,  ShortList: true });
+    const shortlistedUsers = await User.find({ Domain: domain, ShortList: true });
 
     res.status(200).json(shortlistedUsers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving shortlisted users" });
+  }
+});
+
+
+
+// to get statistics
+router.get('/statistics', async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+
+    const adminId = req.user._id;
+    const admin = await Admin.findById(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+    
+    const domain = admin.Domain;
+    // number of submitted projects
+    const submittedProjectsCount = await ProjectSubmission.countDocuments();
+
+    //number of registered users
+    const registeredUsersCount = await User.find({ Domain: domain }).countDocuments();
+
+    const shortlistedUsersCount = await User.find({ Domain: domain }).countDocuments({ ShortList: true });
+
+    res.status(200).json({
+      success: true,
+      submittedProjectsCount,
+      registeredUsersCount,
+      shortlistedUsersCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Failed to fetch statistics' });
   }
 });
 
