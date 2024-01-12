@@ -27,6 +27,8 @@ router.get('/projectsList', async (req, res) => {
     }
 });
 
+
+//  admin to retrieve all project submissions by ID
 router.get('/projectSubmission/:submissionId', async (req, res) => {
     try {
         if (!req.user || !req.user.isAdmin) {

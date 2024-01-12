@@ -20,7 +20,7 @@ router.get('/myprofile', async (req, res, next) => {
   }
 });
 
-// Admin Update
+// Admin Profile Update
 
 router.put("/myprofile", async (req, res) => {
   try {
