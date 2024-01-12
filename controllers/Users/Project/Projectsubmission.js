@@ -6,20 +6,28 @@ const ProjectSubmissionModel = require('../../../models/ProjectSubmission.js');
 // submitting a project
 router.post('/submission/:id', async (req, res) => {
     try {
-        const id = req.user._id;
-        if (!id) {
+        const userId = req.user._id;
+        if (!userId) {
             return res.status(400).json({ success: false, message: 'User Not Found' });
         }
+
+        // Check if the user has already submitted a project
+        const existingSubmission = await ProjectSubmissionModel.findOne({ userId });
+
+        if (existingSubmission) {
+            return res.status(400).json({ success: false, message: 'User has already submitted a project' });
+        }
+
         const { submissionLink } = req.body;
 
         // Validate required fields
         if (!submissionLink) {
-            return res.status(400).json({ success: false, message: 'submissionLink are required fields' });
+            return res.status(400).json({ success: false, message: 'submissionLink is a required field' });
         }
 
         // Create a new project submission
         const projectSubmission = new ProjectSubmissionModel({
-            userId: id,
+            userId,
             submissionLink,
         });
 
@@ -31,6 +39,7 @@ router.post('/submission/:id', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to submit project' });
     }
 });
+
 
 
 
