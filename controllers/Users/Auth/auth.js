@@ -11,8 +11,8 @@ router.post("/signup", async (req, res, next) => {
   try {
     const { name, email, password, admissionNumber, year, Domain } = req.body;
 
-     // Check email Validation
-     if (!emailValidatorRegex.test(email)) {
+    // Check email Validation
+    if (!emailValidatorRegex.test(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -22,7 +22,7 @@ router.post("/signup", async (req, res, next) => {
     if (existingUser) {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
-   
+
 
     // Hash the password before saving to the database
     const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -54,10 +54,10 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-      // Check email Validation
-      if (!emailValidatorRegex.test(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-      }
+    // Check email Validation
+    if (!emailValidatorRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
 
     // Check if user with the given email exists
     const validUser = await User.findOne({ email });
@@ -75,7 +75,7 @@ router.post('/login', async (req, res, next) => {
 
     // Generate JWT token for authentication
     const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser);
-    
+
     // Remove password from the user data before sending it in the response
     const { password: _, ...userData } = validUser._doc;
 
