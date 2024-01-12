@@ -220,9 +220,9 @@ router.get('/shortlistUser', async (req, res) => {
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-
+    const domain = admin.Domain;
     // Fetch all shortlisted users
-    const shortlistedUsers = await User.find({ ShortList: true });
+    const shortlistedUsers = await User.find({Domain:domain,  ShortList: true });
 
     res.status(200).json(shortlistedUsers);
   } catch (error) {
