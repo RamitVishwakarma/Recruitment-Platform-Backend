@@ -4,7 +4,30 @@ const User = require('../../models/User');
 const ProjectSubmission = require('../../models/ProjectSubmission.js');
 const router = express.Router();
 const Upload = require("../../helpers/uploadFile.js");
+// multer
+const multer = require('multer')
+// disk storage for multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './Uploads/AdminImages/')
+  },
+  filename: function (req, file, cb) {
 
+    // cb(null, file.originalname)
+    cb(null, `${Date.now()}-${file.originalname}`)
+  }
+})
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2 MB limit
+  },
+});
+
+//add these 2 lines to make sure the parsing functionality is passed on to access body
+router.use(require('express').json());
+router.use(require('express').urlencoded({ extended: true }));
 
 
 // show Admin Profile
@@ -25,45 +48,53 @@ router.get('/myprofile', async (req, res, next) => {
 
 // Admin Profile Update
 
-router.put("/myprofile", async (req, res) => {
+router.put("/myprofile", upload.single('photo'), async (req, res) => {
   try {
     // Admin Access Required
     if (!req.user.isAdmin) {
       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
     }
-
-    // uploading files to cloudinary
-    const file = req.files.photo;
-    const upload = await Upload.uploadFile(file, 'AdminImages');
-    const UploadedFile = upload.secure_url;
-    const uploadedFileName = file.name;
-    // console.log(upload.secure_url);
-    // console.log(UploadedFile);
-    if (!UploadedFile) {
-      return res.status(400).json({ success: false, message: "File not uploaded" });
-    }
-    // moving files to Admin directory
-    file.mv(`./public/AdminProfileImage/${uploadedFileName}`, async (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ success: false, message: "Error moving file to local directory" });
+    if (req.file) {
+      // uploading files to cloudinary
+      const file = req.file.path;
+      const upload = await Upload.uploadFile(file, 'AdminImages');
+      const UploadedFile = upload.secure_url;
+      // console.log(UploadedFile);
+      if (!UploadedFile) {
+        return res.status(400).json({ success: false, message: "File not uploaded" });
       }
-    });
-    const id = req.user._id; // getting user id form the jwt encryption
-    // console.log(UploadedFile)
-    const updatedUser = await Admin.findByIdAndUpdate(id, {
-      name: req.body.name,
-      email: req.body.email,
-      photo: UploadedFile,
-      phoneNumber: req.body.phoneNumber,
-      Domain: req.body.Domain
-    }, { new: true });
+      const id = req.user._id; // getting user id form the jwt encryption
+      // console.log(UploadedFile)
+      const updatedUser = await Admin.findByIdAndUpdate(id, {
+        name: req.body.name,
+        email: req.body.email,
+        photo: UploadedFile,
+        phoneNumber: req.body.phoneNumber,
+        Domain: req.body.Domain
+      }, { new: true });
 
-    if (updatedUser) {
-      res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+      if (updatedUser) {
+        res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+      } else {
+        res.status(404).json({ success: false, message: "User not found" });
+      }
     } else {
-      res.status(404).json({ success: false, message: "User not found" });
+      const id = req.user._id; // getting user id form the jwt encryption
+      // console.log(UploadedFile)
+      const updatedUser = await Admin.findByIdAndUpdate(id, {
+        name: req.body.name,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+        Domain: req.body.Domain
+      }, { new: true });
+
+      if (updatedUser) {
+        res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+      } else {
+        res.status(404).json({ success: false, message: "User not found" });
+      }
     }
+
 
   } catch (error) {
     console.error(error);
