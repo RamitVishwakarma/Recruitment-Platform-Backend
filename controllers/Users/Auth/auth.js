@@ -3,16 +3,17 @@ const User = require('../../../models/User.js');
 const { errorHandler } = require('../../../utils/error.js')
 const bcryptjs = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const validator = require('validator');
 const tokenBlacklist = new Set();
 
-const emailValidatorRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
 router.post("/signup", async (req, res, next) => {
   try {
     const { name, email, password, admissionNumber, year, Domain } = req.body;
 
-    // Check email Validation
-    if (!emailValidatorRegex.test(email)) {
+    // Validate email 
+    if (!validator.isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -27,7 +28,6 @@ router.post("/signup", async (req, res, next) => {
     // Hash the password before saving to the database
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
-    // Create a new user instance
     const newUser = new User({
       name,
       email,
@@ -37,13 +37,10 @@ router.post("/signup", async (req, res, next) => {
       Domain
     });
 
-    // Save the new user to the database
     await newUser.save();
 
-    // Respond with a success message
     res.status(201).json({ success: true, message: 'User created successfully!' });
   } catch (error) {
-    // Handle errors using the provided error handler
     next(error);
   }
 });
@@ -54,8 +51,8 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Check email Validation
-    if (!emailValidatorRegex.test(email)) {
+    // Validate email using 
+    if (!validator.isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -76,7 +73,7 @@ router.post('/login', async (req, res, next) => {
     // Generate JWT token for authentication
     const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser);
 
-    // Remove password from the user data before sending it in the response
+    // Remove password from the user data 
     const { password: _, ...userData } = validUser._doc;
 
     res

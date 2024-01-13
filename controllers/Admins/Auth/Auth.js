@@ -2,17 +2,17 @@ const router = require("express").Router();
 const Admin = require("../../../models/Admin.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const validator = require('validator');
 const tokenBlacklist = new Set();
 
-const emailValidatorRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // admins will be created by the super admin
 router.post("/signup", async (req, res, next) => {
   try {
     const { name, email, password, Domain } = req.body;
 
-    // Check email Validation
-    if (!emailValidatorRegex.test(email)) {
+    // Validate email 
+    if (!validator.isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -26,16 +26,12 @@ router.post("/signup", async (req, res, next) => {
     // Hash the password before saving to the database
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    // Create a new user instance
     const newUser = new Admin({ name, email, password: hashedPassword, Domain });
-
-    // Save the new user to the database
     await newUser.save();
 
-    // Respond with a success message
     res.status(201).json({ success: true, message: 'User created successfully!' });
   } catch (error) {
-    // Handle errors using the provided error handler
+
     next(error);
   }
 });
@@ -45,8 +41,8 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check email Validation
-    if (!emailValidatorRegex.test(email)) {
+    // Validate email 
+    if (!validator.isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -71,11 +67,11 @@ router.post('/login', async (req, res) => {
 
     const { password: _, ...others } = validUser._doc;
 
-    // Use the spread operator to include properties from the 'others' object
+
     res
       .header('Authorization', 'Bearer ' + token)
       .status(200)
-      .json({ ...others }); // Corrected to include 'accessToken'
+      .json({ ...others });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Login failed" });
