@@ -4,12 +4,12 @@ var validator = require('validator');
 const adminSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a name'],
     minlength: 3,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a email'],
     unique: true,
     validate: {
       validator: (value) => validator.isEmail(value),
@@ -35,7 +35,7 @@ const adminSchema = new mongoose.Schema({
   },
   Domain: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a Domain'],
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   isAdmin: {

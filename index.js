@@ -15,15 +15,9 @@ const connectdb = require("./database/database.js");
 connectdb(DATABASE_URL);
 // database end
 
-//
-app.use(fileUpload({
-    useTempFiles : true,
-    limits: { fileSize: 2 * 1024 * 1024 }, // Set the limit to 2MB
-}));
 
 app.use("/public",express.static("public"));
 app.use(express.json());
-// Include express.urlencoded() middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 

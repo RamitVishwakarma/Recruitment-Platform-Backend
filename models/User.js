@@ -4,12 +4,12 @@ var validator = require('validator');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    minlength: 3,
+    required: [true, 'Please provide a name'], 
+    // minlength: [3, 'Name must be at least 3 characters long'],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a email'],
     unique: true,
     validate: {
       validator: (value) => validator.isEmail(value),
@@ -35,33 +35,23 @@ const userSchema = new mongoose.Schema({
   },
   Domain: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a Domain'],
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   year: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a year'],
     enum: ['1', '2'],
   },
   admissionNumber: {
     type: String,
-    required: true,
+    required: [true, 'Please provide a admissionNumber'],
     unique: true,
   },
   resume: {
     type: String,
     required: false
   },
-  // resume: {
-  //   type: String, // Assuming you store the resume file path
-  //   validate: {
-  //     validator: function (value) {
-  //       // Regular expression for checking file extensions (PDF or DOCX)
-  //       return /\.(pdf|docx)$/i.test(value);
-  //     },
-  //     message: 'Resume must be in PDF or DOCX format',
-  //   },
-  // },
   socialLinks: {
     github: {
       type: String,

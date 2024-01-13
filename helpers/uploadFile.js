@@ -14,11 +14,12 @@ const uploadFile = async (file, FolderName) => {
 
         const uploadAsync = promisify(cloudinary.uploader.upload);
         const options = {
-            folder: `${FolderName}`, // Add the folder name here
+            folder: `${FolderName}`, //  folder name h
         };
-
-        const result = await uploadAsync(file.tempFilePath, options);
+        
+        const result = await uploadAsync(file, options);
         const uploadedFile = result;
+        // console.log(uploadedFile)
         return uploadedFile;
 
     } catch (error) {
