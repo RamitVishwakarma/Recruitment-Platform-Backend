@@ -135,36 +135,6 @@ router.get('/listUsers', async (req, res) => {
 });
 
 
-// Filter list of all users by year
-// router.get('/listUsers/:id', async (req, res) => {  // passing year in id
-//   try {
-
-//     if (!req.user.isAdmin) {
-//       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
-//     }
-
-//     const adminId = req.user._id;
-//     const admin = await Admin.findById(adminId);
-
-//     if (!admin) {
-//       return res.status(404).json({ success: false, message: "Admin not found" });
-//     }
-
-//     const domain = admin.Domain;
-//     // const domain = "Programmming";
-//     // console.log(domain)
-//     const userId = req.params.id;
-//     // Fetch users based on the admin's domain
-//     // const userList = await User.find();
-//     const userList = await User.find({ Domain: domain, year: userId });
-//     console.log(userList)
-
-//     res.status(200).json(userList);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: "Error retrieving user list" });
-//   }
-// });
 
 
 
@@ -175,9 +145,7 @@ router.get('/listUsersByYear', async (req, res) => {
     const userId = parseInt(req.query.year, 10);
     // console.log(userId);
 
-    if (isNaN(userId)) {
-      return res.status(400).json({ success: false, message: 'Invalid year provided.' });
-    }
+
 
     if (!req.user.isAdmin) {
       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
@@ -191,10 +159,18 @@ router.get('/listUsersByYear', async (req, res) => {
     }
 
     const domain = admin.Domain;
+    if (userId) {
 
+      const userList = await User.find({ Domain: domain, year: userId });
+      res.status(200).json(userList);
+
+    } else {
+
+      const userList = await User.find({ Domain: domain });
+      res.status(200).json(userList);
+
+    }
     // const userList = await User.find();
-    const userList = await User.find({ Domain: domain, year: userId });
-    res.status(200).json(userList);
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving user list" });
