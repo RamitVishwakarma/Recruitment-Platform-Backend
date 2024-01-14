@@ -4,30 +4,7 @@ const User = require('../../models/User.js');
 const { errorHandler } = require('../../utils/error.js')
 // Require the cloudinary library
 const Upload = require("../../helpers/uploadFile.js");
-// multer
-const multer = require('multer')
-// disk storage for multer
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './Uploads/UserImages/')
-    },
-    filename: function (req, file, cb) {
-
-        // cb(null, file.originalname)
-        cb(null, `${Date.now()}-${file.originalname}`)
-    }
-})
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 2 * 1024 * 1024, // 2 MB limit
-    },
-});
-
-//add these 2 lines to make sure the parsing functionality is passed on to access body
-router.use(require('express').json());
-router.use(require('express').urlencoded({ extended: true }));
+const upload = require("../../helpers/multer.js");
 
 
 // user Details 
@@ -116,7 +93,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
             // Uploading file to Cloudinary
             const cloudinaryUpload = await Upload.uploadFile(file, 'ProfileImages');
             // console.log(cloudinaryUpload)
-            console.log(cloudinaryUpload)
+            // console.log(cloudinaryUpload)
             if (!cloudinaryUpload) {
                 return res.status(400).json({ success: false, message: "File not uploaded" });
             }
