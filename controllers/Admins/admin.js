@@ -135,7 +135,7 @@ router.get('/listUsers', async (req, res) => {
 });
 
 
-// list of all users by year and domain
+// Filter list of all users by year
 // router.get('/listUsers/:id', async (req, res) => {  // passing year in id
 //   try {
 
@@ -157,7 +157,7 @@ router.get('/listUsers', async (req, res) => {
 //     // Fetch users based on the admin's domain
 //     // const userList = await User.find();
 //     const userList = await User.find({ Domain: domain, year: userId });
-//     // console.log(userList)
+//     console.log(userList)
 
 //     res.status(200).json(userList);
 //   } catch (error) {
@@ -169,10 +169,11 @@ router.get('/listUsers', async (req, res) => {
 
 
 // Filtering list of all users by year  
-//   GET /listUsers?year=2022
-router.get('/listUsers', async (req, res) => {  // passing year in id
+//   GET /listUsers?year=2022  --   Query
+router.get('/listUsersByYear', async (req, res) => {
   try {
     const userId = parseInt(req.query.year, 10);
+    // console.log(userId);
 
     if (isNaN(userId)) {
       return res.status(400).json({ success: false, message: 'Invalid year provided.' });
@@ -190,20 +191,16 @@ router.get('/listUsers', async (req, res) => {  // passing year in id
     }
 
     const domain = admin.Domain;
-    // const domain = "Programmming";
-    // console.log(domain)
-    // const userId = req.params.id;
 
     // const userList = await User.find();
     const userList = await User.find({ Domain: domain, year: userId });
-    // console.log(userList)
-
     res.status(200).json(userList);
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving user list" });
   }
 });
+
 
 
 // list of users by id for populating its details

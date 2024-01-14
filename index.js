@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const fileUpload = require('express-fileupload')
+var morgan = require('morgan')
 dotenv.config();
 
 const PORT = process.env.PORT || 80;
@@ -18,6 +19,7 @@ connectdb(DATABASE_URL);
 
 app.use("/public",express.static("public"));
 app.use(express.json());
+app.use(morgan('tiny'));  //  morgan(':method :url :status :res[content-length] - :response-time ms')
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
