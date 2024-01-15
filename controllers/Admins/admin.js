@@ -4,7 +4,7 @@ const User = require('../../models/User');
 const ProjectSubmission = require('../../models/ProjectSubmission.js');
 const router = express.Router();
 const Upload = require("../../helpers/uploadFile.js");
-const upload = require("../../helpers/multer.js");
+const upload = require("../../helpers/adminMulter.js");
 const { errorHandler } = require('../../utils/error.js');
 
 // show Admin Profile
@@ -25,7 +25,7 @@ router.get('/myprofile', async (req, res, next) => {
 
 // Admin Profile Update
 
-router.put("/myprofile", upload.single('photo'), async (req, res) => {
+router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
   try {
     // Admin Access Required
     if (!req.user.isAdmin) {
