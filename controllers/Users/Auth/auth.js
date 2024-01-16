@@ -23,8 +23,6 @@ router.post("/signup", async (req, res, next) => {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
 
-
-    // Hash the password before saving to the database
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newUser = new User({
@@ -70,7 +68,9 @@ router.post('/login', async (req, res, next) => {
     }
 
     // Generate JWT token for authentication
-    const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser);
+    const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser, {
+      expiresIn: "3d"
+    });
 
     // Remove password from the user data 
     const { password: _, ...userData } = validUser._doc;

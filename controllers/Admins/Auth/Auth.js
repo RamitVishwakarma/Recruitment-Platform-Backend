@@ -23,7 +23,6 @@ router.post("/signup", async (req, res, next) => {
       return res.status(409).json({ error: 'User with this email already exists' });
     }
 
-    // Hash the password before saving to the database
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const newUser = new Admin({ name, email, password: hashedPassword, Domain });
