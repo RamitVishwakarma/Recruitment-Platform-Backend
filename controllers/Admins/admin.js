@@ -111,7 +111,26 @@ router.get('/listUsers', async (req, res) => {
   }
 });
 
+// search Api
+router.get('/search', async (req, res) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+    const { name } = req.query;
+    const queryObject = {}
 
+    if (name) {
+      queryObject.name = { $regex: name, $options: 'i' }
+    }
+    const userList = await User.find(queryObject);
+    res.status(200).json(userList);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error retrieving user list" });
+  }
+
+})
 
 
 
