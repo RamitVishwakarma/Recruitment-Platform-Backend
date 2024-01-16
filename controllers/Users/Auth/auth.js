@@ -7,7 +7,6 @@ const validator = require('validator');
 const tokenBlacklist = new Set();
 
 
-
 router.post("/signup", async (req, res, next) => {
   try {
     const { name, email, password, admissionNumber, year, Domain } = req.body;
