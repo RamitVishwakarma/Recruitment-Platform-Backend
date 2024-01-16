@@ -17,11 +17,15 @@ connectdb(DATABASE_URL);
 // database end
 
 
-app.use("/public",express.static("Uploads"));
+app.use("/public", express.static("Uploads"));
 app.use(express.json());
 app.use(morgan('tiny'));  //  morgan(':method :url :status :res[content-length] - :response-time ms')
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    // origin: 'http://your-frontend-app.com',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 
 // using routes
