@@ -86,40 +86,6 @@ router.post('/login', async (req, res, next) => {
 });
 
 
-// ----------------Not in use----------------------------------------
-// router.post('/login', async (req, res, next) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     // Check if user with the given email exists
-//     const validUser = await User.findOne({ email });
-
-//     if (!validUser) {
-//       return next(errorHandler(404, 'User not found!'));
-//     }
-
-//     // Check if the password is valid
-//     const validPassword = bcryptjs.compareSync(password, validUser.password);
-
-//     if (!validPassword) {
-//       return next(errorHandler(401, 'Wrong credentials!'));
-//     }
-
-//     // Generate JWT token for authentication
-//     const accessToken = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser);
-
-//     // Remove sensitive information from the user data before sending it in the response
-//     const { password: _, ...userData } = validUser._doc;
-
-//     res.status(200).json({ ...userData, accessToken });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// ------------------------------------------------------------------------
-
-
 router.post("/logout", (req, res) => {
   try {
     const authHeader = req.headers["authorization"];

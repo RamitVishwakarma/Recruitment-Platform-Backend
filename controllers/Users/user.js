@@ -5,6 +5,7 @@ const { errorHandler } = require('../../utils/error.js')
 // Require the cloudinary library
 const Upload = require("../../helpers/uploadFile.js");
 const upload = require("../../helpers/multer.js");
+const resume = require("../../helpers/Resumemulter.js");
 
 
 // user Details 
@@ -24,63 +25,9 @@ router.get('/myprofile', async (req, res, next) => {
 });
 
 
+
+
 // User profile Update
-// not in use
-// router.put("/myprofile", async (req, res) => {
-//     try {
-
-//         // uploading files to cloudinary
-//         const file = req.files.photo;
-//         // console.log(file.name)
-//         const upload = await Upload.uploadFile(file);
-//         const UploadedFile = upload.secure_url;
-//         // console.log(upload)
-
-//         if (file) {
-//             const UploadedFileName = file.name;
-//             file.mv('../../public/ProfileImages' + UploadedFileName, (err) => {
-//                 if (err) {
-//                     res.send(err);
-//                 }else{
-//                     res.send("File Uploaded")
-//                 }
-//             })
-
-//         }
-
-//         if (UploadedFile) {
-//             const id = req.user._id; // getting user id form the jwt encryption
-
-//             const updatedUser = await User.findByIdAndUpdate(id, {
-//                 name: req.body.name,
-//                 phoneNumber: req.body.phoneNumber,
-//                 photo: UploadedFile,
-//                 resume: req.body.resume,
-//                 year: req.body.year,
-//                 Domain: req.body.Domain,
-//                 admissionNumber: req.body.admissionNumber,
-//                 phoneNumber: req.body.phoneNumber,
-//                 socialLinks: req.body.socialLinks
-//             }, { new: true });
-//             if (updatedUser) {
-//                 res.status(200).json({ success: true, message: "User profile updated successfully" });
-//             } else {
-//                 res.status(404).json({ success: false, message: "User not found" });
-//             }
-//         } else {
-//             res.status(404).json({ success: false, message: "User Image not Found" })
-//         }
-
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ success: false, message: "User profile not updated" });
-//     }
-// });
-
-
-
-
-
 router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
     try {
         // let uploadedFile = req.user.photo;
@@ -142,30 +89,45 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
 });
 
 
-// testing Purpose
-// router.put("/Updateprofile",  upload.single('photo'),async (req, res) => {
-//     try {
-//         // upload.single('photo'),
-//         const file = req.file.path
-//         console.log(file);
-//         // console.log(file)
-//         // Uploading file to Cloudinary
-//         const cloudinaryUpload = await Upload.uploadFile(file, 'ProfileImages');
-//         const uploadedFile = cloudinaryUpload.secure_url;
-//         console.log(cloudinaryUpload)
-//         console.log(uploadedFile)
+// update users resume
+router.put("/Updateresume", resume.single('resume'), async (req, res) => {
+    try {
 
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ success: false, message: "User profile not updated" });
-//     }
-// });
+        const file = req.file.path
+        // console.log(file);
+
+        // Uploading file to Cloudinary
+        const cloudinaryUpload = await Upload.uploadFile(file, 'ResumeImages');
+        if (!cloudinaryUpload) {
+            return res.status(400).json({ success: false, message: "File not uploaded" });
+        }
+        const uploadedFile = cloudinaryUpload.secure_url;
+
+        const id = req.user._id;
+        if (!id) {
+            return res.status(400).json({ success: false, message: "User Not Found" });
+        }
+        // Update user resume in the database
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            resume: uploadedFile,
+
+        }, { new: true });
+
+        if (updatedUser) {
+            res.status(200).json({ success: true, message: "User Resume updated successfully", user: updatedUser });
+        } else {
+            res.status(404).json({ success: false, message: "User not found" });
+
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "User Resume not updated" });
+    }
+});
+
 
 // user Deletion
-
-
-
-
 router.get('/delete/:id', async (req, res, next) => {
     if (req.user._id !== req.params.id)
         return next(errorHandler(401, 'You can only delete your own account!'));
