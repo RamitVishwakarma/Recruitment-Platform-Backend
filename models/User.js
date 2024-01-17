@@ -4,7 +4,7 @@ var validator = require('validator');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please provide a name'], 
+    required: [true, 'Please provide a name'],
     // minlength: [3, 'Name must be at least 3 characters long'],
   },
   email: {
@@ -35,17 +35,17 @@ const userSchema = new mongoose.Schema({
   },
   Domain: {
     type: String,
-    required: [true, 'Please provide a Domain'],
+    required: false, 
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   year: {
     type: String,
-    required: [true, 'Please provide a year'],
+    required: false,
     enum: ['1', '2'],
   },
   admissionNumber: {
     type: String,
-    required: [true, 'Please provide a admissionNumber'],
+    required: false,
     unique: true,
   },
   resume: {

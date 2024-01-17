@@ -43,6 +43,45 @@ router.post("/signup", async (req, res, next) => {
 });
 
 
+// Google auth
+router.post("/google", async (req, res, next) => {
+  const { name, email } = req.body;
+  try {
+    const validUser = await User.findOne({ email });
+
+    if (validUser) {
+      const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUser, {
+        expiresIn: "3d"
+      });
+      const { password: pass, ...rest } = validUser._doc;
+      res
+        .header('Authorization', 'Bearer ' + token)
+        .status(200)
+        .json(rest);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+      const newUser = new User({
+        name,
+        email,
+        password: hashedPassword,
+      });
+      await newUser.save();
+      const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRETUser, {
+        expiresIn: "3d"
+      });
+      const { password: pass, ...rest } = newUser._doc;
+      res
+        .header('Authorization', 'Bearer ' + token)
+        .status(200)
+        .json(rest);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/login', async (req, res, next) => {
   try {
