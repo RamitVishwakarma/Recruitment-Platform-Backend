@@ -21,6 +21,8 @@ app.use("/public", express.static("Uploads"));
 app.use(express.json());
 app.use(morgan('tiny'));  //  morgan(':method :url :status :res[content-length] - :response-time ms')
 app.use(express.urlencoded({ extended: true }));
+app.options('*', cors());
+// app.use(cors({exposedHeaders: ['Authorization']}));
 app.use(cors({
     // origin: 'http://your-frontend-app.com',
     credentials: true,
