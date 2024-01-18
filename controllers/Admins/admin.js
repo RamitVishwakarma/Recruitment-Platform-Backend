@@ -47,7 +47,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
         email: req.body.email,
         photo: UploadedFile,
         phoneNumber: req.body.phoneNumber,
-        Domain: req.body.Domain
+        domain: req.body.domain
       }, { new: true });
 
       if (updatedUser) {
@@ -62,7 +62,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
         name: req.body.name,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        Domain: req.body.Domain
+        domain: req.body.domain
       }, { new: true });
 
       if (updatedUser) {
@@ -95,7 +95,7 @@ router.get('/listUsers', async (req, res) => {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
 
-    const domain = admin.Domain;
+    const domain = admin.domain;
     // const domain = "Programmming";
     // console.log(domain)
 
@@ -154,7 +154,7 @@ router.get('/listUsersByYear', async (req, res) => {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
 
-    const domain = admin.Domain;
+    const domain = admin.domain;
     if (userId) {
 
       const userList = await User.find({ domain: domain, year: userId });
@@ -262,7 +262,7 @@ router.get('/shortlistUser', async (req, res) => {
     if (!admin) {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
-    const domain = admin.Domain;
+    const domain = admin.domain;
     // Fetch all shortlisted users
     const shortlistedUsers = await User.find({ domain: domain, ShortList: true });
 
@@ -289,10 +289,10 @@ router.get('/statistics', async (req, res) => {
       return res.status(404).json({ success: false, message: "Admin not found" });
     }
 
-    const domain = admin.Domain;
+    const domain = admin.domain;
     // number of submitted projects
     const submittedProject = await ProjectSubmission.find({}).populate({ path: "userId", select: "name Domain" });
-    const submittedProjectsCount = submittedProject.filter(project => project.userId.Domain === domain).length;
+    const submittedProjectsCount = submittedProject.filter(project => project.userId.domain === domain).length;
     // console.log('Submitted Projects Count:', submittedProjectsCount);
     // console.log(submittedProject)
 

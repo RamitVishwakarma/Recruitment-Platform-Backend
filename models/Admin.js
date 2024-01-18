@@ -33,7 +33,7 @@ const adminSchema = new mongoose.Schema({
     required: false,
     Default: "https://i.postimg.cc/c15MbgrZ/pngwing-com.png"
   },
-  Domain: {
+  domain: {
     type: String,
     required: [true, 'Please provide a Domain'],
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],

@@ -9,7 +9,7 @@ const tokenBlacklist = new Set();
 // admins will be created by the super admin
 router.post("/signup", async (req, res, next) => {
   try {
-    const { name, email, password, Domain } = req.body;
+    const { name, email, password, domain } = req.body;
 
     // Validate email 
     if (!validator.isEmail(email)) {
@@ -25,7 +25,7 @@ router.post("/signup", async (req, res, next) => {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    const newUser = new Admin({ name, email, password: hashedPassword, Domain });
+    const newUser = new Admin({ name, email, password: hashedPassword, domain });
     await newUser.save();
 
     res.status(201).json({ success: true, message: 'User created successfully!' });
