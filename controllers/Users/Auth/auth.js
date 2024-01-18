@@ -114,10 +114,13 @@ router.post('/login', async (req, res, next) => {
     // Remove password from the user data 
     const { password: _, ...userData } = validUser._doc;
 
-    res
-      .header('Authorization', 'Bearer ' + token)
-      .status(200)
+
+    res.header('Authorization', 'Bearer ' + token)
+    // Expose the 'Authorization' header to the client
+    res.header('Access-Control-Expose-Headers', 'Authorization');
+    res.status(200)
       .json(userData);
+
   } catch (error) {
     next(error);
   }
