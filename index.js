@@ -23,11 +23,17 @@ app.use(morgan('tiny'));  //  morgan(':method :url :status :res[content-length] 
 app.use(express.urlencoded({ extended: true }));
 // app.options('*', cors());
 // app.use(cors({exposedHeaders: ['Authorization']}));
+// app.use(cors({
+//     origin: '*',
+//     credentials: true,
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
 app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:5173',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 
 // using routes
