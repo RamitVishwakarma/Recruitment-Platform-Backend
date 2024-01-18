@@ -67,9 +67,10 @@ router.post('/login', async (req, res) => {
     const { password: _, ...others } = validUser._doc;
 
 
-    res
-      .header('Authorization', 'Bearer ' + token)
-      .status(200)
+    res.header('Authorization', 'Bearer ' + token)
+    // Expose the 'Authorization' header to the client
+    res.header('Access-Control-Expose-Headers', 'Authorization');
+    res.status(200)
       .json({ ...others });
   } catch (error) {
     console.error(error);

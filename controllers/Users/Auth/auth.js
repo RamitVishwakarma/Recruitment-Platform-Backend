@@ -73,9 +73,11 @@ router.post("/google", async (req, res, next) => {
         expiresIn: "3d"
       });
       const { password: pass, ...rest } = newUser._doc;
-      res
-        .header('Authorization', 'Bearer ' + token)
-        .status(200)
+
+      res.header('Authorization', 'Bearer ' + token)
+      // Expose the 'Authorization' header to the client
+      res.header('Access-Control-Expose-Headers', 'Authorization');
+      res.status(200)
         .json(rest);
     }
   } catch (error) {
