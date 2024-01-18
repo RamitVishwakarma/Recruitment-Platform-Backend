@@ -75,7 +75,7 @@ router.get('/export-to-excel', async (req, res) => {
         }
         const domain = admin.Domain;
 
-        const users = await User.find({ Domain: domain }).lean();
+        const users = await User.find({ domain: domain }).lean();
 
         const projectSubmissions = await ProjectSubmission.find({
             userId: { $in: users.map(user => user._id) }, // Filter submissions by users from the specified domain

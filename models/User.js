@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
     required: false,
     default:"https://i.postimg.cc/c15MbgrZ/pngwing-com.png"
   },
-  Domain: {
+  domain: {
     type: String,
     required: false, 
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],

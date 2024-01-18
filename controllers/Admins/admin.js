@@ -101,7 +101,7 @@ router.get('/listUsers', async (req, res) => {
 
     // Fetch users based on the admin's domain
     // const userList = await User.find();
-    const userList = await User.find({ Domain: domain });
+    const userList = await User.find({ domain: domain });
     // console.log(userList)
 
     res.status(200).json(userList);
@@ -157,12 +157,12 @@ router.get('/listUsersByYear', async (req, res) => {
     const domain = admin.Domain;
     if (userId) {
 
-      const userList = await User.find({ Domain: domain, year: userId });
+      const userList = await User.find({ domain: domain, year: userId });
       res.status(200).json(userList);
 
     } else {
 
-      const userList = await User.find({ Domain: domain });
+      const userList = await User.find({ domain: domain });
       res.status(200).json(userList);
 
     }
@@ -264,7 +264,7 @@ router.get('/shortlistUser', async (req, res) => {
     }
     const domain = admin.Domain;
     // Fetch all shortlisted users
-    const shortlistedUsers = await User.find({ Domain: domain, ShortList: true });
+    const shortlistedUsers = await User.find({ domain: domain, ShortList: true });
 
     res.status(200).json(shortlistedUsers);
   } catch (error) {
@@ -297,9 +297,9 @@ router.get('/statistics', async (req, res) => {
     // console.log(submittedProject)
 
     //number of registered users
-    const registeredUsersCount = await User.find({ Domain: domain }).countDocuments();
+    const registeredUsersCount = await User.find({ domain: domain }).countDocuments();
 
-    const shortlistedUsersCount = await User.find({ Domain: domain }).countDocuments({ ShortList: true });
+    const shortlistedUsersCount = await User.find({ domain: domain }).countDocuments({ ShortList: true });
 
     res.status(200).json({
       success: true,

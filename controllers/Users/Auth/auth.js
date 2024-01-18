@@ -9,7 +9,7 @@ const tokenBlacklist = new Set();
 
 router.post("/signup", async (req, res, next) => {
   try {
-    const { name, email, password, admissionNumber, year, Domain } = req.body;
+    const { name, email, password, admissionNumber, year, domain } = req.body;
 
     // Validate email 
     if (!validator.isEmail(email)) {
@@ -31,7 +31,7 @@ router.post("/signup", async (req, res, next) => {
       password: hashedPassword,
       admissionNumber,
       year,
-      Domain
+      domain
     });
 
     await newUser.save();
