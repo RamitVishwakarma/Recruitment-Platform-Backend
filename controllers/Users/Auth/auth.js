@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require('../../../models/User.js');
-const { errorHandler } = require('../../../utils/error.js')
+const errorHandler  = require('../../../utils/error.js')
 const bcryptjs = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require('validator');
@@ -113,6 +113,7 @@ router.post('/login', async (req, res, next) => {
       expiresIn: "3d"
     });
 
+
     // Remove password from the user data 
     const { password: _, ...userData } = validUser._doc;
 
@@ -126,6 +127,7 @@ router.post('/login', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+
 });
 
 
@@ -150,5 +152,31 @@ router.post("/logout", (req, res) => {
   }
 });
 
+// Route to update the user's password
+router.put('/updatePassword/:id', async (req, res) => {
+  try {
+    const { newPassword, confirmPassword } = req.body;
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
+    const hashedPassword = bcryptjs.hashSync(newPassword, 10);
+    user.password = hashedPassword;
+
+    // Save the updated user object
+    await user.save();
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 module.exports = router;

@@ -5,7 +5,7 @@ const ProjectSubmission = require('../../models/ProjectSubmission.js');
 const router = express.Router();
 const Upload = require("../../helpers/uploadFile.js");
 const upload = require("../../helpers/adminMulter.js");
-const { errorHandler } = require('../../utils/error.js');
+const  errorHandler  = require('../../utils/error.js');
 
 // show Admin Profile
 router.get('/myprofile', async (req, res, next) => {

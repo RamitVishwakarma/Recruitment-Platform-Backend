@@ -102,6 +102,38 @@ router.post("/logout", (req, res) => {
   }
 });
 
+router.put('/updatePassword/:id', async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.params.id; 
+    console.log("🚀 ~ router.put ~ userId:", userId);
 
+    const user = await Admin.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the provided old password matches the one stored in the database
+    const isOldPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+    if (!isOldPasswordValid) {
+      return res.status(401).json({ message: 'Invalid old password' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    user.password = hashedPassword;
+
+    // Save the updated user object
+    await user.save();
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 module.exports = router;

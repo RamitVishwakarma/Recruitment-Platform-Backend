@@ -1,7 +1,7 @@
 const express = require('express')
 const router = require("express").Router();
 const User = require('../../models/User.js');
-const { errorHandler } = require('../../utils/error.js')
+const errorHandler  = require('../../utils/error.js')
 // Require the cloudinary library
 const Upload = require("../../helpers/uploadFile.js");
 const upload = require("../../helpers/multer.js");
@@ -12,6 +12,8 @@ const resume = require("../../helpers/Resumemulter.js");
 router.get('/myprofile', async (req, res, next) => {
     try {
         id = await req.user._id;
+        console.log("🚀 ~ router.get ~ id:", id);
+
         const user = await User.findById(id);
         // const user = await User.findById(req.params.id);
 

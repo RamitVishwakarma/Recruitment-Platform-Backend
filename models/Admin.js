@@ -35,7 +35,7 @@ const adminSchema = new mongoose.Schema({
   },
   domain: {
     type: String,
-    required: [true, 'Please provide a Domain'],
+    required: false, 
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   isAdmin: {
