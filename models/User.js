@@ -87,6 +87,16 @@ const userSchema = new mongoose.Schema({
     required: false,
     default: false
   },
+  interviewStatus: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  projectStatus: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
   quizzesTaken: [{
     quizId: {
       type: mongoose.Schema.Types.ObjectId,

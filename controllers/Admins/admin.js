@@ -99,34 +99,35 @@ router.get('/listUsers', async (req, res) => {
     // Fetch users based on the admin's domain
     const userList = await User.find({ domain });
 
-    // Extract user IDs for project submission query
-    const userIds = userList.map(user => user._id);
+    // // Extract user IDs for project submission query
+    // const userIds = userList.map(user => user._id);
 
-    // Fetch submission details for all users in the domain
-    const submissionDetails = await ProjectSubmission.find({ userId: { $in: userIds } })
-      .select('userId submissionLink');
+    // // Fetch submission details for all users in the domain
+    // const submissionDetails = await ProjectSubmission.find({ userId: { $in: userIds } })
+    //   .select('userId submissionLink');
 
-    // Combine user and submission details
-    const userDetailsWithSubmissions = userList.map(user => {
-      const userSubmissions = submissionDetails.filter(submission => submission.userId.equals(user._id));
-      return {
-        user: {
-          ...user._doc,
-          password: undefined, // Omitting password for security reasons
-        },
-        ProjectSubmission: userSubmissions.map(submission => ({
-          submissionId: submission._id,
-          submissionLink: submission.submissionLink,
-        })),
-      };
-    });
+    // // Combine user and submission details
+    // const userDetailsWithSubmissions = userList.map(user => {
+    //   const userSubmissions = submissionDetails.filter(submission => submission.userId.equals(user._id));
+    //   return {
+    //     user: {
+    //       ...user._doc,
+    //       password: undefined, // Omitting password for security reasons
+    //     },
+    //     ProjectSubmission: userSubmissions.map(submission => ({
+    //       submissionId: submission._id,
+    //       submissionLink: submission.submissionLink,
+    //     })),
+    //   };
+    // });
 
-    res.status(200).json({ success: true, userDetailsWithSubmissions });
+    res.status(200).json({ success: true, userList });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error retrieving user list' });
   }
 });
+
 
 // search Api
 router.get('/search', async (req, res) => {
@@ -140,7 +141,7 @@ router.get('/search', async (req, res) => {
     if (name) {
       queryObject.name = { $regex: name, $options: 'i' }
     }
-    const userList = await User.find(queryObject);
+    const userList = await User.find(queryObject).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
     res.status(200).json(userList);
   } catch (error) {
     console.error(error);
@@ -174,13 +175,15 @@ router.get('/listUsersByYear', async (req, res) => {
     const domain = admin.domain;
     if (userId) {
 
-      const userList = await User.find({ domain: domain, year: userId });
-      res.status(200).json(userList);
+      const userList = await User.find({ domain: domain, year: userId }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
+
+      res.status(200).json({ success: true, userList });
 
     } else {
 
-      const userList = await User.find({ domain: domain });
-      res.status(200).json(userList);
+      const userList = await User.find({ domain: domain }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');;
+
+      res.status(200).json({ success: true, userList });
 
     }
     // const userList = await User.find();
@@ -215,7 +218,7 @@ router.get("/findUser/:id", async (req, res) => {
       .select('submissionLink');
 
     // Combine user and submission details
-    const userDetailsWithSubmissions = {
+    const userProfileDetails = {
       user: {
         ...user._doc,
         password: undefined, // Omitting password for security reasons
@@ -223,7 +226,7 @@ router.get("/findUser/:id", async (req, res) => {
       ProjectSubmission: submissionDetails,
     };
 
-    res.status(200).json({ success: true, userDetailsWithSubmissions });
+    res.status(200).json({ success: true, userProfileDetails });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server data not found" });
@@ -279,7 +282,7 @@ router.put('/shortlistUser/:id', async (req, res) => {
 
 
 // list of all shortlisted users of its Domain
-router.get('/shortlistUser', async (req, res) => {
+router.get('/shortlistedUsers', async (req, res) => {
   try {
     // Admin Access Required
     if (!req.user.isAdmin) {
@@ -294,9 +297,9 @@ router.get('/shortlistUser', async (req, res) => {
     }
     const domain = admin.domain;
     // Fetch all shortlisted users
-    const shortlistedUsers = await User.find({ domain: domain, ShortList: true });
+    const shortlistedUsers = await User.find({ domain: domain, ShortList: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
 
-    res.status(200).json(shortlistedUsers);
+    res.status(200).json({ success: true, shortlistedUsers });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving shortlisted users" });
