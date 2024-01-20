@@ -39,7 +39,8 @@ router.post("/signup", async (req, res, next) => {
     sendResetEmail(
       email,
       process.env.SENDGRID_SENDER_EMAIL,
-      'noreply@gdscjssaten.com',
+      // 'noreply@gdscjssaten.com',
+      'Welcome to GDSC! Complete Your Registration and Start Your Tech Journey',
       `
       <p>Dear ${name},</p>
 
@@ -58,7 +59,7 @@ router.post("/signup", async (req, res, next) => {
 
       <p>Ready to dive in? <a href="[Your Platform Link]" target="_blank">Login to your GDSC account</a> and let the adventure begin!</p>
 
-      <p>If you have any questions or need assistance, feel free to reach out to our team at [Contact Email]. We're here to support you every step of the way.</p>
+      <p>If you have any questions or need assistance, feel free to reach out to our team at <b>dscjssnoida@gmail.com</b>. We're here to support you every step of the way.</p>
 
       <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.</p>
 
