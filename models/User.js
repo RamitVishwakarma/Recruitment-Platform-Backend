@@ -31,11 +31,11 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String,
     required: false,
-    default:"https://i.postimg.cc/c15MbgrZ/pngwing-com.png"
+    default: "https://i.postimg.cc/c15MbgrZ/pngwing-com.png"
   },
   domain: {
     type: String,
-    required: false, 
+    required: false,
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   year: {
@@ -97,6 +97,12 @@ const userSchema = new mongoose.Schema({
       default: 0,
     },
   }],
+  resetPasswordToken: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
+  }
 }, { timestamps: true });
 
 const UserModel = mongoose.model('User', userSchema);

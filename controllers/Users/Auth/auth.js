@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const User = require('../../../models/User.js');
-const errorHandler  = require('../../../utils/error.js')
+const errorHandler = require('../../../utils/error.js')
 const bcryptjs = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require('validator');
+const sendResetEmail = require("../../../helpers/sendgrid.js");
+const crypto = require('crypto');
 const tokenBlacklist = new Set();
 
 
@@ -178,5 +180,98 @@ router.put('/updatePassword/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+
+// forget password (send a reset email)
+router.post('/forget-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Checking if the email exists in the users array 
+    const user = await User.findOne({ email });
+
+    if (user) {
+      // Generate and store a reset token 
+      const resetToken = crypto.randomBytes(32).toString('hex');
+      const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+      // Set the reset token and expiration in the user document
+      user.resetPasswordToken = resetPasswordToken;
+      user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+      // Save the user document with reset token information
+      await user.save();
+
+      const link = `${req.protocol}://localhost:3000/api/user/auth/reset_password/${resetToken}`;
+
+      // Send reset instructions via email
+      sendResetEmail(
+        email,
+        process.env.SENDGRID_SENDER_EMAIL,
+        'noreply@gdscjssaten.com',
+        `
+        <p>Dear user,</p>
+        <p>We received a request to reset your password for Best To Do account associated with this email address.</p>
+        <p>Please click the link below to reset your password. This link will be valid for the next 15 minutes:</p>
+        <p><a href="${link}" target="_blank">${link}</a></p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <p>Best regards,<br/>Team gdscjssaten</p>
+        `
+      );
+
+      res.status(200).json({
+        success: true,
+        message: 'Password reset instructions have been sent to your email address. Please check your inbox and follow the provided link to reset your password.',
+      });
+    } else {
+      res.status(404).json({ error: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error in forget-password:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// Route for handling password reset
+router.put('/reset_password/:token', async (req, res, next) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
+    const resetToken = req.params.token;
+
+    // Hash the reset token to match the stored hash
+    const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Find the user with the matching email and reset token
+    const user = await User.findOne({
+      email,
+      resetPasswordToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Token is invalid or has been expired' });
+    }
+
+    // Check if newPassword and confirmPassword match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match.' });
+    }
+
+    // Reset the password
+    user.password = await bcryptjs.hash(newPassword, 10);
+    user.resetPasswordToken = null; // Reset the reset token after the password reset
+    user.resetPasswordExpires = null; // Reset the reset token expiration
+
+    // Save the updated user to the database
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successfully.' });
+  } catch (error) {
+    console.error('Error in password reset:', error);
+    return next(error);
+  }
+});
+
 
 module.exports = router;
