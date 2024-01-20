@@ -106,7 +106,7 @@ router.get('/export-to-excel', async (req, res) => {
         if (!admin) {
             return res.status(404).json({ success: false, message: "Admin not found" });
         }
-        const domain = admin.Domain;
+        const domain = admin.domain;
 
         const users = await User.find({ domain: domain }).lean();
 
@@ -131,7 +131,7 @@ router.get('/export-to-excel', async (req, res) => {
                         user.name,
                         user.email,
                         user.year,
-                        user.Domain,
+                        user.domain,
                         submission._id,
                         submission.submissionLink
                     ]);
