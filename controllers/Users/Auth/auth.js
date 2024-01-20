@@ -35,7 +35,36 @@ router.post("/signup", async (req, res, next) => {
       year,
       domain
     });
+    // Send reset instructions via email
+    sendResetEmail(
+      email,
+      process.env.SENDGRID_SENDER_EMAIL,
+      'noreply@gdscjssaten.com',
+      `
+      <p>Dear ${name},</p>
 
+      <p>Welcome to the GDSC Recruitment Platform! We are thrilled to have you on board. 🚀</p>
+
+      <p>Congratulations on taking the first step towards joining our community of passionate individuals dedicated to technology and innovation.</p>
+
+      <p>Here's what you can expect from your GDSC journey:</p>
+      <ul>
+         <li>Exciting opportunities to learn and grow in the tech industry.</li>
+          <li>Exclusive access to workshops, events, and mentorship programs.</li>
+          <li>A chance to collaborate with like-minded individuals on impactful projects.</li>
+      </ul>
+
+      <p>To get started, please complete your profile on our platform and explore the available resources. Stay tuned for upcoming events and recruitment updates!</p>
+
+      <p>Ready to dive in? <a href="[Your Platform Link]" target="_blank">Login to your GDSC account</a> and let the adventure begin!</p>
+
+      <p>If you have any questions or need assistance, feel free to reach out to our team at [Contact Email]. We're here to support you every step of the way.</p>
+
+      <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.</p>
+
+      <p>Best regards,<br/>gdscjssaten</p>
+      `
+    );
     await newUser.save();
 
     res.status(201).json({ success: true, message: 'User created successfully!' });
