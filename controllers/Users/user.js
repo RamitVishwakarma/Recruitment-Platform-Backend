@@ -1,26 +1,59 @@
 const express = require('express')
 const router = require("express").Router();
 const User = require('../../models/User.js');
-const errorHandler  = require('../../utils/error.js')
+const errorHandler = require('../../utils/error.js')
 // Require the cloudinary library
 const Upload = require("../../helpers/uploadFile.js");
 const upload = require("../../helpers/multer.js");
 const resume = require("../../helpers/Resumemulter.js");
+const NodeCache = require('node-cache');
+const ProjectSubmission = require('../../models/ProjectSubmission.js');
 
+const nodeCache = new NodeCache({
+    stdTTL: 100,
+    checkperiod: 120
+});
 
 // user Details 
 router.get('/myprofile', async (req, res, next) => {
     try {
-        id = await req.user._id;
-        console.log("🚀 ~ router.get ~ id:", id);
+        const userId = req.user._id;
 
-        const user = await User.findById(id);
-        // const user = await User.findById(req.params.id);
+        // Check if user details are in the cache
+        let userDetails = nodeCache.get(`userDetails:${userId}`);
 
-        if (!user) return next(errorHandler(404, 'User not found!'));
+        if (!userDetails) {
+            // If not in the cache, fetch from the database
+            const user = await User.findById(userId);
 
-        const { password, ...rest } = user._doc;
-        res.status(200).json(rest);
+            if (!user) {
+                return next(errorHandler(404, 'User not found!'));
+            }
+
+            // Fetch submission details
+            const submissionDetails = await ProjectSubmission.find({ userId })
+                .select('submissionLink');
+
+            // Combine user and submission details
+            const userDetailsWithSubmissions = {
+                user: {
+                    ...user._doc,
+                    password: undefined, // Omitting password for security reasons
+                },
+                ProjectSubmission: submissionDetails,
+            };
+            // console.log("🚀 ~ router.get ~ userDetailsWithSubmissions.user:", userDetailsWithSubmissions.user);
+
+
+            // Store in the cache
+            nodeCache.set(`userDetails:${userId}`, JSON.stringify(userDetailsWithSubmissions));
+
+            res.status(200).json(userDetailsWithSubmissions);
+        } else {
+            // If in the cache, return cached data
+            const cachedUserDetails = JSON.parse(userDetails);
+            res.status(200).json(cachedUserDetails);
+        }
     } catch (error) {
         next(error);
     }
@@ -62,6 +95,8 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
 
             if (updatedUser) {
                 res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+                nodeCache.del("userDetails"); // Delete user details from the cache
+
             } else {
                 res.status(404).json({ success: false, message: "User not found" });
             }
@@ -79,6 +114,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
 
             if (updatedUser) {
                 res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
+                nodeCache.del("userDetails"); // Delete user details from the cache
             } else {
                 res.status(404).json({ success: false, message: "User not found" });
             }
@@ -117,6 +153,7 @@ router.put("/Updateresume", resume.single('resume'), async (req, res) => {
 
         if (updatedUser) {
             res.status(200).json({ success: true, message: "User Resume updated successfully", user: updatedUser });
+            nodeCache.del("userDetails"); // Delete user details from the cache
         } else {
             res.status(404).json({ success: false, message: "User not found" });
 

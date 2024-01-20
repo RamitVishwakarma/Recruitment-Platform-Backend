@@ -7,56 +7,89 @@ const ExcelJS = require('exceljs');
 
 
 //  admin to retrieve all project submissions
-router.get('/projectsList', async (req, res) => {
+router.get('/SubmittedprojectsList', async (req, res) => {
     try {
-        const adminId = req.user._id;
-        const admin = await Admin.findById(adminId);
-        console.log(req.user)
-        if (!admin) {
-            return res.status(404).json({ success: false, message: "Admin not found" });
-        }
-
         if (!req.user.isAdmin) {
             return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
         }
 
-        // Retrieve all project submissions from the database
-        const allSubmissions = await ProjectSubmission.find();
+        const adminId = req.user._id;
+        const admin = await Admin.findById(adminId);
 
-        res.status(200).json({ success: true, projects: allSubmissions });
+        if (!admin) {
+            return res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+
+        const domain = admin.domain;
+
+        // Fetch users based on the admin's domain
+        const userList = await User.find({ domain });
+
+        // Extract user IDs for project submission query
+        const userIds = userList.map(user => user._id);
+
+        // Fetch submission details for users in the domain who have submitted projects
+        const submissionDetails = await ProjectSubmission.find({ userId: { $in: userIds } })
+            .select('userId submissionLink');
+
+        // Filter users who have submitted projects
+        const usersWithSubmissions = userList.filter(user =>
+            submissionDetails.some(submission => submission.userId.equals(user._id))
+        );
+
+        // Combine user and submission details
+        const userDetailsWithSubmissions = usersWithSubmissions.map(user => {
+            const userSubmissions = submissionDetails
+                .filter(submission => submission.userId.equals(user._id))
+                .map(submission => ({
+                    submissionId: submission._id,
+                    submissionLink: submission.submissionLink,
+                }));
+
+            return {
+                user: {
+                    ...user._doc,
+                    password: undefined, // Omitting password for security reasons
+                },
+                ProjectSubmission: userSubmissions,
+            };
+        });
+
+        res.status(200).json({ success: true, userDetailsWithSubmissions })
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Failed to retrieve projects submissions' });
     }
-});
+}
+);
 
 
-//  admin to retrieve all project submissions by ID
-router.get('/projectSubmission/:submissionId', async (req, res) => {
-    try {
-        if (!req.user || !req.user.isAdmin) {
-            return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
-        }
+//  admin to retrieve all project submissions by ID---- not in use
+// router.get('/projectSubmission/:submissionId', async (req, res) => {
+//     try {
+//         if (!req.user || !req.user.isAdmin) {
+//             return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+//         }
 
-        const { submissionId } = req.params;
+//         const { submissionId } = req.params;
 
-        if (!submissionId.match(/^[0-9a-fA-F]{24}$/)) {
-            return res.status(400).json({ success: false, message: 'Invalid submission ID format' });
-        }
+//         if (!submissionId.match(/^[0-9a-fA-F]{24}$/)) {
+//             return res.status(400).json({ success: false, message: 'Invalid submission ID format' });
+//         }
 
-        // Retrieve the project submission by ID 
-        const submission = await ProjectSubmission.findById(submissionId);
+//         // Retrieve the project submission by ID 
+//         const submission = await ProjectSubmission.findById(submissionId);
 
-        if (!submission) {
-            return res.status(404).json({ success: false, message: 'Project submission not found' });
-        }
+//         if (!submission) {
+//             return res.status(404).json({ success: false, message: 'Project submission not found' });
+//         }
 
-        res.status(200).json({ success: true, project: submission });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Failed to retrieve project submission' });
-    }
-});
+//         res.status(200).json({ success: true, project: submission });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: 'Failed to retrieve project submission' });
+//     }
+// });
 
 
 router.get('/export-to-excel', async (req, res) => {

@@ -5,7 +5,7 @@ const ProjectSubmission = require('../../models/ProjectSubmission.js');
 const router = express.Router();
 const Upload = require("../../helpers/uploadFile.js");
 const upload = require("../../helpers/adminMulter.js");
-const  errorHandler  = require('../../utils/error.js');
+const errorHandler = require('../../utils/error.js');
 
 // show Admin Profile
 router.get('/myprofile', async (req, res, next) => {
@@ -83,7 +83,6 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
 // list of all users of its Domain
 router.get('/listUsers', async (req, res) => {
   try {
-
     if (!req.user.isAdmin) {
       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
     }
@@ -92,22 +91,40 @@ router.get('/listUsers', async (req, res) => {
     const admin = await Admin.findById(adminId);
 
     if (!admin) {
-      return res.status(404).json({ success: false, message: "Admin not found" });
+      return res.status(404).json({ success: false, message: 'Admin not found' });
     }
 
     const domain = admin.domain;
-    // const domain = "Programmming";
-    // console.log(domain)
 
     // Fetch users based on the admin's domain
-    // const userList = await User.find();
-    const userList = await User.find({ domain: domain });
-    // console.log(userList)
+    const userList = await User.find({ domain });
 
-    res.status(200).json(userList);
+    // Extract user IDs for project submission query
+    const userIds = userList.map(user => user._id);
+
+    // Fetch submission details for all users in the domain
+    const submissionDetails = await ProjectSubmission.find({ userId: { $in: userIds } })
+      .select('userId submissionLink');
+
+    // Combine user and submission details
+    const userDetailsWithSubmissions = userList.map(user => {
+      const userSubmissions = submissionDetails.filter(submission => submission.userId.equals(user._id));
+      return {
+        user: {
+          ...user._doc,
+          password: undefined, // Omitting password for security reasons
+        },
+        ProjectSubmission: userSubmissions.map(submission => ({
+          submissionId: submission._id,
+          submissionLink: submission.submissionLink,
+        })),
+      };
+    });
+
+    res.status(200).json({ success: true, userDetailsWithSubmissions });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error retrieving user list" });
+    res.status(500).json({ success: false, message: 'Error retrieving user list' });
   }
 });
 
@@ -193,7 +210,20 @@ router.get("/findUser/:id", async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json({ success: true, user });
+    // Fetch submission details
+    const submissionDetails = await ProjectSubmission.find({ userId })
+      .select('submissionLink');
+
+    // Combine user and submission details
+    const userDetailsWithSubmissions = {
+      user: {
+        ...user._doc,
+        password: undefined, // Omitting password for security reasons
+      },
+      ProjectSubmission: submissionDetails,
+    };
+
+    res.status(200).json({ success: true, userDetailsWithSubmissions });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server data not found" });
