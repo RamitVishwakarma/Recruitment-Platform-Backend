@@ -45,30 +45,76 @@ router.post("/signup", async (req, res, next) => {
       email,
       process.env.SENDGRID_SENDER_EMAIL,
       // 'noreply@gdscjssaten.com',
-      'Welcome to GDSC! Complete Your Registration and Start Your Tech Journey',
+      'Welcome to GDSC! Lets Get Started: Complete Your Registration and Embark on Your Tech Adventure 🚀',
       `
-      <p>Dear ${name},</p>
+      
+      <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; width: 50%; margin: 0 auto;">
+      <img src="https://i.postimg.cc/13JXgXwd/banner.png" alt="GDSC logo" width="100%" height="80%">
+  <h2 style="font-weight: 700; font-size: larger;">Dear ${name},</h2>
+  <br>
+  <p style="font-size: large">
+    Welcome to the Gateway of Innovation at GDSC! Let the journey begin! 🚀
+  </p>
+  <p>
+    Congratulations on embarking on the exciting adventure of joining our
+    vibrant community where passion meets technology. 🌐
+  </p>
+  <p>Get ready for an odyssey filled with:</p>
+  <ul>
+    <li>
+      🌟 Thrilling opportunities to not just learn, but to soar in the dynamic
+      tech industry. 💡
+    </li>
+    <br />
+    <li>
+      🎓 Exclusive backstage passes to mind-expanding workshops, electrifying
+      events, and personalized mentorship programs. 🚀
+    </li>
+    <br />
+    <li>
+      👥 A front-row seat to collaborate with brilliant minds on projects that
+      make a real impact. Get ready to amplify your teamwork skills! 💻
+    </li>
+  </ul>
+  <p>We're thrilled to have you on board! 🤩</p>
+  <p>
+    Unlock the door to your GDSC experience by completing your profile on our
+    platform. Dive into a treasure trove of resources designed to fuel your
+    curiosity and passion. Stay tuned for the symphony of upcoming events and
+    recruitment updates! ⏰
+  </p>
+  <p>
+    Your journey with GDSC is not just a step; it's a leap into a world where
+    innovation knows no bounds. Let the adventure unfold! 🌈✨
+  </p>
 
-      <p>Welcome to the GDSC Recruitment Platform! We are thrilled to have you on board. 🚀</p>
+  <div style="font-size: large;">
+      <p>Ready to dive in?</p>
+      <button style="background-color: #ABD700; padding: .9rem 1rem; border-radius: 0.7rem; color: rgb(37, 37, 37); border: none;">
+            <a style="background-color: #ABD700;  font-weight: bolder; text-decoration: none;" href="https://gdscrecruitments.in" target="_blank">Log in to your GDSC account</a>
+            </button>
+      <br>
+      <p>and let the adventures begin!🌟</p>
+  </div>
 
-      <p>Congratulations on taking the first step towards joining our community of passionate individuals dedicated to technology and innovation.</p>
+  <hr style="opacity: 0.5;">
+  <p>If you have any questions or ened assistance, feel free to reach out to our team at <a href="mailto:gdsc@jssaten.ac.in">gdsc@jssaten.ac.in</a> We're here to support you every step of the way.🤝</p>
 
-      <p>Here's what you can expect from your GDSC journey:</p>
-      <ul>
-         <li>Exciting opportunities to learn and grow in the tech industry.</li>
-          <li>Exclusive access to workshops, events, and mentorship programs.</li>
-          <li>A chance to collaborate with like-minded individuals on impactful projects.</li>
-      </ul>
-
-      <p>To get started, please complete your profile on our platform and explore the available resources. Stay tuned for upcoming events and recruitment updates!</p>
-
-      <p>Ready to dive in? <a href="[Your Platform Link]" target="_blank">Login to your GDSC account</a> and let the adventure begin!</p>
-
-      <p>If you have any questions or need assistance, feel free to reach out to our team at <b>dscjssnoida@gmail.com</b>. We're here to support you every step of the way.</p>
-
-      <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.</p>
-
-      <p>Best regards,<br/>gdscjssaten</p>
+  <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.🌐</p>
+<br>
+  <p>Best Regards, <br>GDSC JSSATEN</p>
+  <br>
+  <br>
+  <div style="background-color: #f5f5f5; padding: 2px 20px;">
+      <h4>Follow us on:</h4>
+      <div style="display: flex; gap: 45px;">
+          <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/ryfy1Jjw/icons8-linkedin-100.png" alt=""></a>
+          <a href="https://www.instagram.com/gdscjssaten/" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/mk76LVmW/icons8-instagram-96.png" alt=""></a>
+          <a href="https://twitter.com/dscjssaten?lang=en" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/nr77NP0B/icons8-twitter-100.png" alt=""></a>
+          <a href="https://github.com/DSC-JSS-NOIDA" target="_blank"><img style="width: 35px;" src="https://i.postimg.cc/ZnhFYm9V/icons8-github-128.png" alt=""></a>
+      </div>
+      <p>&#169; GDSC JSSATEN  2024</p>
+  </div>
       `
     );
 
@@ -111,30 +157,75 @@ router.post("/google", async (req, res, next) => {
         email,
         process.env.SENDGRID_SENDER_EMAIL,
         // 'noreply@gdscjssaten.com',
-        'Welcome to GDSC! Complete Your Registration and Start Your Tech Journey',
+        'Welcome to GDSC! Lets Get Started: Complete Your Registration and Embark on Your Tech Adventure 🚀',
         `
-      <p>Dear ${name},</p>
-
-      <p>Welcome to the GDSC Recruitment Platform! We are thrilled to have you on board. 🚀</p>
-
-      <p>Congratulations on taking the first step towards joining our community of passionate individuals dedicated to technology and innovation.</p>
-
-      <p>Here's what you can expect from your GDSC journey:</p>
-      <ul>
-         <li>Exciting opportunities to learn and grow in the tech industry.</li>
-          <li>Exclusive access to workshops, events, and mentorship programs.</li>
-          <li>A chance to collaborate with like-minded individuals on impactful projects.</li>
-      </ul>
-
-      <p>To get started, please complete your profile on our platform and explore the available resources. Stay tuned for upcoming events and recruitment updates!</p>
-
-      <p>Ready to dive in? <a href="[Your Platform Link]" target="_blank">Login to your GDSC account</a> and let the adventure begin!</p>
-
-      <p>If you have any questions or need assistance, feel free to reach out to our team at <b>dscjssnoida@gmail.com</b>. We're here to support you every step of the way.</p>
-
-      <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.</p>
-
-      <p>Best regards,<br/>gdscjssaten</p>
+        <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; width: 50%; margin: 0 auto;">
+        <img src="https://i.postimg.cc/13JXgXwd/banner.png" alt="GDSC logo" width="100%" height="80%">
+    <h2 style="font-weight: 700; font-size: larger;">Dear ${name},</h2>
+    <br>
+    <p style="font-size: large">
+      Welcome to the Gateway of Innovation at GDSC! Let the journey begin! 🚀
+    </p>
+    <p>
+      Congratulations on embarking on the exciting adventure of joining our
+      vibrant community where passion meets technology. 🌐
+    </p>
+    <p>Get ready for an odyssey filled with:</p>
+    <ul>
+      <li>
+        🌟 Thrilling opportunities to not just learn, but to soar in the dynamic
+        tech industry. 💡
+      </li>
+      <br />
+      <li>
+        🎓 Exclusive backstage passes to mind-expanding workshops, electrifying
+        events, and personalized mentorship programs. 🚀
+      </li>
+      <br />
+      <li>
+        👥 A front-row seat to collaborate with brilliant minds on projects that
+        make a real impact. Get ready to amplify your teamwork skills! 💻
+      </li>
+    </ul>
+    <p>We're thrilled to have you on board! 🤩</p>
+    <p>
+      Unlock the door to your GDSC experience by completing your profile on our
+      platform. Dive into a treasure trove of resources designed to fuel your
+      curiosity and passion. Stay tuned for the symphony of upcoming events and
+      recruitment updates! ⏰
+    </p>
+    <p>
+      Your journey with GDSC is not just a step; it's a leap into a world where
+      innovation knows no bounds. Let the adventure unfold! 🌈✨
+    </p>
+  
+    <div style="font-size: large;">
+        <p>Ready to dive in?</p>
+        <button style="background-color: #ABD700; padding: .9rem 1rem; border-radius: 0.7rem; color: rgb(37, 37, 37); border: none;">
+              <a style="background-color: #ABD700;  font-weight: bolder; text-decoration: none;" href="https://gdscrecruitments.in" target="_blank">Log in to your GDSC account</a>
+              </button>
+        <br>
+        <p>and let the adventures begin!🌟</p>
+    </div>
+  
+    <hr style="opacity: 0.5;">
+    <p>If you have any questions or ened assistance, feel free to reach out to our team at <a href="mailto:gdsc@jssaten.ac.in">gdsc@jssaten.ac.in</a> We're here to support you every step of the way.🤝</p>
+  
+    <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.🌐</p>
+  <br>
+    <p>Best Regards, <br>GDSC JSSATEN</p>
+    <br>
+    <br>
+    <div style="background-color: #f5f5f5; padding: 2px 20px;">
+        <h4>Follow us on:</h4>
+        <div style="display: flex; gap: 45px;">
+            <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/ryfy1Jjw/icons8-linkedin-100.png" alt=""></a>
+            <a href="https://www.instagram.com/gdscjssaten/" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/mk76LVmW/icons8-instagram-96.png" alt=""></a>
+            <a href="https://twitter.com/dscjssaten?lang=en" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/nr77NP0B/icons8-twitter-100.png" alt=""></a>
+            <a href="https://github.com/DSC-JSS-NOIDA" target="_blank"><img style="width: 35px;" src="https://i.postimg.cc/ZnhFYm9V/icons8-github-128.png" alt=""></a>
+        </div>
+        <p>&#169; GDSC JSSATEN  2024</p>
+    </div>
       `
       );
 
@@ -275,14 +366,36 @@ router.post('/forget-password', async (req, res) => {
       sendResetEmail(
         email,
         process.env.SENDGRID_SENDER_EMAIL,
-        'noreply@gdscjssaten.com',
+        'Reset Your Best To Do Password: Your Key to Seamless Task Management 🗝️',
         `
-        <p>Dear user,</p>
-        <p>We received a request to reset your password for Best To Do account associated with this email address.</p>
-        <p>Please click the link below to reset your password. This link will be valid for the next 15 minutes:</p>
-        <p><a href="${link}" target="_blank">${link}</a></p>
-        <p>If you did not request a password reset, please ignore this email.</p>
-        <p>Best regards,<br/>Team gdscjssaten</p>
+        <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; width: 600px; margin: 0 auto;">
+        <img src="https://i.postimg.cc/13JXgXwd/banner.png" alt="GDSC logo" width="100%" height="80%">
+        <br>
+        <br>
+        <p>Hope you're doing awesome! 🌟</p>
+        <p>We've received a request to reset the password for your Best To Do account associated with this email address. Your security is our priority, and we're here to assist you in this process.</p>
+        <p>To initiate the password reset, simply follow the link provided below:</p>
+        <br>
+        <button style="background-color: #ABD700; padding: .9rem 1rem; border-radius: 0.7rem; color: rgb(37, 37, 37); border: none;">
+            <a style="background-color: #ABD700; font-weight: bolder; text-decoration: none;" href="${link}" target="_blank">Reset Password</a>
+        </button>
+        <br>
+        <br>
+        
+        <p>Didn't request a password reset? No biggie, just hit delete. We've got everything under control!</p>
+        <p>Any worries or need a hand? Drop us a line; we've got your back!</p>
+        <p>Cheers!<br/>Team GDSC JSSATEN</p>
+        <div style="background-color: #f5f5f5; padding: 2px 20px;">
+        <h4>Follow us on:</h4>
+        <div style="display: flex; gap: 45px;">
+            <a href="https://www.linkedin.com/company/dsc-jssaten/" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/ryfy1Jjw/icons8-linkedin-100.png" alt=""></a>
+            <a href="https://www.instagram.com/gdscjssaten/" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/mk76LVmW/icons8-instagram-96.png" alt=""></a>
+            <a href="https://twitter.com/dscjssaten?lang=en" target="_blank"><img style="width: 35px; margin-right: 2rem;" src="https://i.postimg.cc/nr77NP0B/icons8-twitter-100.png" alt=""></a>
+            <a href="https://github.com/DSC-JSS-NOIDA" target="_blank"><img style="width: 35px;" src="https://i.postimg.cc/ZnhFYm9V/icons8-github-128.png" alt=""></a>
+        </div>
+        <p>&#169; GDSC JSSATEN  2024</p>
+    </div>
+    </div>
         `
       );
 
