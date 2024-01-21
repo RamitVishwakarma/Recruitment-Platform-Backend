@@ -81,17 +81,22 @@ router.put('/updateQuiz/:quizId', async (req, res) => {
 });
 
 
-
-
 // GET all questions
 router.get('/showAllQuestions', async (req, res) => {
     try {
-      const questions = await QuizModel.find();
-      res.status(200).json(questions);
+
+        // Admin Access Required
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+        }
+
+        const questions = await QuizModel.find();
+        res.status(200).json(questions);
+
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-  });
+});
 
 module.exports = router;
