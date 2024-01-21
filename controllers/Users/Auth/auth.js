@@ -101,7 +101,7 @@ router.post("/signup", async (req, res, next) => {
 
         <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.🌐</p>
       <br>
-        <p>Best Regards, <br>GDSC JSSATEN</p>
+        <p>Best Regards, <br>Team GDSC JSSATEN</p>
         <br>
         <br>
         <div style="background-color: #f5f5f5; padding: 2px 20px;">
@@ -212,7 +212,7 @@ router.post("/google", async (req, res, next) => {
         
           <p>Thank you for joining GDSC! We look forward to shaping the future of technology together.🌐</p>
         <br>
-          <p>Best Regards, <br>GDSC JSSATEN</p>
+          <p>Best Regards, <br>Team GDSC JSSATEN</p>
           <br>
           <br>
           <div style="background-color: #f5f5f5; padding: 2px 20px;">
