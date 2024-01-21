@@ -1,53 +1,62 @@
 const mongoose = require('mongoose');
 
+const optionSchema = new mongoose.Schema({
+  optionText: {
+    type: String,
+    required: true,
+  },
+  isCorrect: {
+    type: Boolean,
+    required: true,
+  },
+});
+
 const questionSchema = new mongoose.Schema({
   questionText: {
     type: String,
     required: true,
   },
-  options: [{
-    optionText: {
-      type: String,
-      required: true,
-    },
-    isCorrect: {
-      type: Boolean, 
-      required: true,
-    },
-  }],
+  options: {
+    type: [optionSchema],
+    required: true,
+    validate: [arrayLimit, '{PATH} exceeds the limit of 4'],
+  },
+  explanation: {
+    type: String,
+    default: '',
+  },
 }, { timestamps: true });
 
-// ------------------------------------------------
-// const quizData = {
-//     title: "JavaScript Basics Quiz",
-//     description: "Test your knowledge of fundamental JavaScript concepts.",
-//     questions: [
-//       // ... (array of questions)
-//     ],
-//     duration: 30, // (example duration in minutes)
-//     projectLink: "https://example.com/quiz-project",
-//   };
-// ------------------------------------------------
+function arrayLimit(val) {
+  return val.length <= 4;
+}
 
 const quizSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  questions: [questionSchema],
-
-  duration: {
-    type: Number,
-    required: true,
-  },
-
+  question: questionSchema, // Change here to accept a single question or an array of questions
 });
 
 const QuizModel = mongoose.model('Quiz', quizSchema);
 
 module.exports = QuizModel;
+
+
+
+
+// ------------------------------------------------
+// const newQuiz = new QuizModel({
+//   questions: [
+//     {
+//       questionText: "What is JavaScript?",
+//       options: [
+//         { optionText: "A programming language", isCorrect: true },
+//         { optionText: "A markup language", isCorrect: false },
+//         // ... other options
+//       ],
+//     },
+//     // ... other questions
+//   ],
+//   duration: 30,
+// });
+// ------------------------------------------------
+
 

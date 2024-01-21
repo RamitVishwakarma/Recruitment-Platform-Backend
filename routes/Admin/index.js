@@ -1,7 +1,7 @@
 const express = require('express');
 const AdminAuthRoute = require("../../controllers/Admins/Auth/Auth.js");
-// const AdminPropertiesRoute = require("../../Controllers/Admin/Properties.js");
 const AdminProfileRoute = require("../../controllers/Admins/admin.js");
+const AdminQuizRoute = require("../../controllers/Admins/Quiz.js");
 const ProjectRoute = require("../../controllers/Admins/Project/ProjectList.js");
 const verifyToken = require('../../middleware/verifyTokenAdmin.js');
 
@@ -12,9 +12,9 @@ router.get("/", (req, res) => {
 })
 
 router.use("/auth", AdminAuthRoute);
-// router.use("/Prop", verifyToken, AdminPropertiesRoute);
 router.use("/profile", verifyToken, AdminProfileRoute);
 router.use("/project", verifyToken, ProjectRoute);
+router.use("/Quiz", verifyToken, AdminQuizRoute);
 
 
 
