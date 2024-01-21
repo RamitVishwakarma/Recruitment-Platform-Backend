@@ -48,7 +48,7 @@ router.post("/signup", async (req, res, next) => {
       'Welcome to GDSC! Lets Get Started: Complete Your Registration and Embark on Your Tech Adventure 🚀',
       `
       
-       <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; width: 50%; margin: 0 auto;">
+       <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; width: 600px; margin: 0 auto;">
             <img src="https://i.postimg.cc/13JXgXwd/banner.png" alt="GDSC logo" width="100%" height="80%">
         <h2 style="font-weight: 700; font-size: larger;">Dear ${name},</h2>
         <p style="font-size: large">
@@ -393,8 +393,8 @@ router.post('/forget-password', async (req, res) => {
             <a href="https://github.com/DSC-JSS-NOIDA" target="_blank"><img style="width: 35px;" src="https://i.postimg.cc/ZnhFYm9V/icons8-github-128.png" alt=""></a>
         </div>
         <p>&#169; GDSC JSSATEN  2024</p>
-    </div>
-    </div>
+        </div>
+        </div>
         `
       );
 
