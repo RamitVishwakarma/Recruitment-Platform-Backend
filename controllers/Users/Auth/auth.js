@@ -380,7 +380,7 @@ router.post('/forget-password', async (req, res) => {
         </button>
         <br>
         <br>
-        
+        <p>Please note that the link will expire in 15 minutes for security reasons.</p>
         <p>Didn't request a password reset? No biggie, just hit delete. We've got everything under control!</p>
         <p>Any worries or need a hand? Drop us a line; we've got your back!</p>
         <p>Cheers!<br/>Team GDSC JSSATEN</p>
