@@ -8,21 +8,18 @@ const router = express.Router();
 // API to create a new quiz
 router.post('/createQuiz', async (req, res) => {
     try {
-        const { questionText, options, explanation } = req.body;
+        const {title, questions, duration } = req.body;
 
         // Admin Access Required
         if (!req.user.isAdmin) {
             return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
         }
 
-        // Create a new quiz
+        // Create a new quiz with multiple questions
         const newQuiz = new QuizModel({
-            question: {
-                questionText,
-                options,
-                explanation,
-            },
-            duration: 30,
+            title,
+            questions,
+            duration: duration || 30, // Set a default duration if not provided
         });
 
         const savedQuiz = await newQuiz.save();
@@ -32,6 +29,10 @@ router.post('/createQuiz', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+
+
 
 
 

@@ -34,17 +34,15 @@ function arrayLimit(val) {
 const quizSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
-  question: questionSchema, // Change here to accept a single question or an array of questions
-
-});
+  questions: [questionSchema], // Change here to accept an array of questions
+  duration: {
+    type: Number,
+    default: 30,
+  },
+}, { timestamps: true });
 
 const QuizModel = mongoose.model('Quiz', quizSchema);
 
 module.exports = QuizModel;
-
-
-
-
-

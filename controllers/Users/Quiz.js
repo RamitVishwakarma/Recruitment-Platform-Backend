@@ -65,7 +65,7 @@ router.post('/submit-quiz', async (req, res, next) => {
         const userId = req.user._id; // Assuming you have the authenticated user object
 
         // Assuming the request body has the following structure:
-        // { quizId: '123', responses: [{ questionId: '456', optionMarked: 'A' }, ...] }
+        // { quizId: '123', responses: [{ optionMarked: 'A' }, ...] }
         const { quizId, responses } = req.body;
 
         // Check if the user has already submitted responses for this quiz
@@ -83,13 +83,12 @@ router.post('/submit-quiz', async (req, res, next) => {
         // Match user responses against correct answers
         // Mapping responses to align with questionsSolved structure
         const scoredResponses = responses.map(userResponse => {
-            const question = quiz.question.find(question =>
-                question._id.toString() === userResponse.questionId.toString()
+            const question = quiz.questions.find(q =>
+                q._id.toString() === userResponse.questionId.toString()
             );
 
             if (!question) {
-                // Handle the case where the question is not found
-                return null;
+                return null; // Handle the case where the question is not found
             }
 
             const correctAnswer = question.options.find(option =>
@@ -99,7 +98,7 @@ router.post('/submit-quiz', async (req, res, next) => {
             const isCorrect = userResponse.optionMarked === correctAnswer.optionText;
 
             return {
-                questionId: userResponse.questionId,
+                questionId: question._id,
                 optionMarked: userResponse.optionMarked,
                 correct: isCorrect,
             };
@@ -122,11 +121,19 @@ router.post('/submit-quiz', async (req, res, next) => {
         await quizResponse.save();
 
         // Update the user's total score
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { $inc: { totalScore: score } },
-            { new: true }
-        );
+        // Update the user's total score and quiz-specific score
+    const user = await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            quizzesTaken: {
+              quizId,
+              totalScore: score,
+            },
+          },
+        },
+        { new: true }
+      );
 
         res.json({
             message: 'Quiz submitted successfully.',
@@ -137,6 +144,7 @@ router.post('/submit-quiz', async (req, res, next) => {
         next(error);
     }
 });
+
 
 
 
