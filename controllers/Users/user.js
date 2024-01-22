@@ -167,15 +167,30 @@ router.put("/Updateresume", resume.single('resume'), async (req, res) => {
 
 
 // user Deletion
-router.get('/delete/:id', async (req, res, next) => {
-    if (req.user._id !== req.params.id)
-        return next(errorHandler(401, 'You can only delete your own account!'));
+router.delete('/delete/:id', async (req, res, next) => {
+    // Ensure that the route is only accessible to authenticated users
+    if (!req.user) {
+        return next(errorHandler(401, 'Unauthorized. Please log in.'));
+    }
+
     try {
-        await User.findByIdAndDelete(req.params.id);
-        res.clearCookie('access_token');
-        res.status(200).json('User has been deleted!');
+        // Check if the authenticated user is trying to delete their own account
+        if (req.user._id !== req.params.id) {
+            return next(errorHandler(403, 'Forbidden. You can only delete your own account.'));
+        }
+
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+        if (!deletedUser) {
+            return next(errorHandler(404, 'User not found.'));
+        }
+        // Clear the Authorization token from headers
+        res.removeHeader('Authorization');
+        res.status(200).json({ success: true, message: 'User has been deleted successfully.' });
     } catch (error) {
-        next(error);
+        next(errorHandler(500, `Internal Server Error: ${error.message}`));
     }
 });
+
+
 module.exports = router;
