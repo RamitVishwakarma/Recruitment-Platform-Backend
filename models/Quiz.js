@@ -47,21 +47,4 @@ module.exports = QuizModel;
 
 
 
-// ------------------------------------------------
-// const newQuiz = new QuizModel({
-//   questions: [
-//     {
-//       questionText: "What is JavaScript?",
-//       options: [
-//         { optionText: "A programming language", isCorrect: true },
-//         { optionText: "A markup language", isCorrect: false },
-//         // ... other options
-//       ],
-//     },
-//     // ... other questions
-//   ],
-//   duration: 30,
-// });
-// ------------------------------------------------
-
 
