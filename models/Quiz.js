@@ -32,7 +32,10 @@ function arrayLimit(val) {
 }
 
 const quizSchema = new mongoose.Schema({
-
+  title: {
+    type: String,
+    required: true,
+  },
   question: questionSchema, // Change here to accept a single question or an array of questions
 
 });

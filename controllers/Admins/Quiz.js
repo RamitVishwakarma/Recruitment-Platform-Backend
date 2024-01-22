@@ -5,8 +5,6 @@ const router = express.Router();
 
 // todo : expire in in schema
 
-
-
 // API to create a new quiz
 router.post('/createQuiz', async (req, res) => {
     try {
@@ -96,6 +94,27 @@ router.get('/showAllQuestions', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
+// Endpoint to get all users' quiz responses and details (admin access)
+router.get('/admin/all-responses', async (req, res, next) => {
+    try {
+        // Check if the user making the request is an admin
+        if (!req.user || !req.user.isAdmin) {
+            return res.status(403).json({ message: 'Unauthorized. Admin access required.' });
+        }
+
+        // Fetch all quiz responses with user and quiz details
+        const allResponses = await QuizResponse.find()
+            .populate('userId', 'username email') // Include user details
+            .populate('quizId', 'title'); // Include quiz details
+
+        res.json(allResponses);
+    } catch (error) {
+        next(error);
     }
 });
 
