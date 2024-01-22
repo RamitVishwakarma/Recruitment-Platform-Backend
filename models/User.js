@@ -102,7 +102,7 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Quiz',
     },
-    score: {
+    totalScore: {
       type: Number,
       default: 0,
     },

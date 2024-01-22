@@ -186,7 +186,7 @@ router.delete('/delete/:id', async (req, res, next) => {
         }
         // Clear the Authorization token from headers
         res.removeHeader('Authorization');
-        res.status(200).json({ success: true, message: 'User has been deleted successfully.' });
+        res.status(204).json({ success: true, message: 'User has been deleted successfully.' });
     } catch (error) {
         next(errorHandler(500, `Internal Server Error: ${error.message}`));
     }
