@@ -48,7 +48,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
         photo: UploadedFile,
         phoneNumber: req.body.phoneNumber,
         domain: req.body.domain
-      }, { new: true });
+      }, { new: true, select: '-password'});
 
       if (updatedUser) {
         res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
@@ -63,7 +63,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         domain: req.body.domain
-      }, { new: true });
+      }, { new: true, select: '-password' });
 
       if (updatedUser) {
         res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
