@@ -91,7 +91,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
                 domain: req.body.Domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
-            }, { new: true });
+            }, { new: true , select: '-password'});
 
             if (updatedUser) {
                 res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
@@ -110,7 +110,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
                 domain: req.body.Domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
-            }, { new: true });
+            }, { new: true , select: '-password'});
 
             if (updatedUser) {
                 res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
@@ -149,7 +149,7 @@ router.put("/Updateresume", resume.single('resume'), async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(id, {
             resume: uploadedFile,
 
-        }, { new: true });
+        }, { new: true , select: '-password'});
 
         if (updatedUser) {
             res.status(200).json({ success: true, message: "User Resume updated successfully", user: updatedUser });
