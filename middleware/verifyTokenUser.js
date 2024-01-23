@@ -17,6 +17,8 @@ const verifyToken=(req,res,next)=>{
                 
             }else{
                 req.user=user;
+                // console.log("🚀 ~ jwt.verify ~ req.user:", req.user);
+
                 next();
             }
         });

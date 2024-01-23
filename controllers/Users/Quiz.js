@@ -23,32 +23,66 @@ const User = require('../../models/User.js');
 const QuizResponse = require('../../models/QuizResponse.js');
 const router = express.Router();
 
-// Assuming you have a static total number of questions
-const totalQuestions = 20;
+
+// show all quizzes
+router.get('/allQuizzes', async (req, res, next) => {
+    try {
+        // Fetch all quizzes
+        const quizzes = await QuizModel.find();
+
+        if (!quizzes || quizzes.length === 0) {
+            return res.status(404).json({ message: 'No quizzes available.' });
+        }
+
+        res.json({ quizzes });
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+// showAll quizzes Domain wise
+router.get('/quizzesByDomain/:domain', async (req, res, next) => {
+    try {
+        const userDomain = req.params.domain; // Assuming domain is passed in the query parameters
+
+        // Fetch quizzes based on the specified user domain
+        const quizzes = await QuizModel.find({ domain: userDomain });
+
+        if (!quizzes || quizzes.length === 0) {
+            return res.status(404).json({ message: `No quizzes available for the specified domain: ${userDomain}` });
+        }
+
+        res.json({ quizzes });
+    } catch (error) {
+        next(error);
+
+    }
+});
+
 
 // Endpoint to get a paginated list of questions with full details including options
-router.get('/questions', async (req, res, next) => {
+router.get('/showQuestions', async (req, res, next) => {
     try {
+        const quizId = req.query.quizId; // Assuming quizId is passed in the query parameters
         const page = parseInt(req.query.page) || 1;
         const limit = 1; // Show only one question at a time
 
+        // Count the total number of questions in the specified quiz
+        const quiz = await QuizModel.findById(quizId).select('questions');
+        if (!quiz) {
+            return res.status(404).json({ message: 'Quiz not found.' });
+        }
+        const totalQuestions = quiz.questions.length;
+
+        // Handle cycling back to the first question if on the last question
+        const normalizedPage = (page - 1) % totalQuestions + 1;
+
         // Fetch paginated questions with full details including options
-        const questions = await QuizModel
-            .find()
-            .skip((page - 1) * limit)
-            .limit(limit);
+        const questions = quiz.questions.slice((normalizedPage - 1) * limit, normalizedPage * limit);
 
         if (!questions || questions.length === 0) {
-            return res.status(404).json({ message: 'No questions available.' });
-        }
-
-        // If it's the last question, redirect to the first question
-        if (page * limit >= totalQuestions) {
-            const firstQuestion = await QuizModel.findOne().limit(1);
-            if (!firstQuestion) {
-                return res.status(404).json({ message: 'No questions available.' });
-            }
-            return res.json({ question: firstQuestion });
+            return res.status(404).json({ message: 'No questions available for the specified quiz.' });
         }
 
         res.json({ question: questions[0] });
@@ -58,7 +92,11 @@ router.get('/questions', async (req, res, next) => {
 });
 
 
-// Endpoint to submit quiz responses
+
+
+
+
+
 // Endpoint to submit quiz responses
 router.post('/submit-quiz', async (req, res, next) => {
     try {
@@ -120,20 +158,19 @@ router.post('/submit-quiz', async (req, res, next) => {
 
         await quizResponse.save();
 
-        // Update the user's total score
         // Update the user's total score and quiz-specific score
-    const user = await User.findByIdAndUpdate(
-        userId,
-        {
-          $push: {
-            quizzesTaken: {
-              quizId,
-              totalScore: score,
+        const user = await User.findByIdAndUpdate(
+            userId,
+            {
+                $push: {
+                    quizzesTaken: {
+                        quizId,
+                        totalScore: score,
+                    },
+                },
             },
-          },
-        },
-        { new: true }
-      );
+            { new: true }
+        );
 
         res.json({
             message: 'Quiz submitted successfully.',
