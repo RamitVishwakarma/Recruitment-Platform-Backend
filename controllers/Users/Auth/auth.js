@@ -126,7 +126,7 @@ router.post("/signup", async (req, res, next) => {
 
 // Google auth
 router.post("/google", async (req, res, next) => {
-  const { name, email } = req.body;
+  const { name, email, photo } = req.body;
   try {
     const validUser = await User.findOne({ email });
 
@@ -137,7 +137,7 @@ router.post("/google", async (req, res, next) => {
       const { password: pass, ...rest } = validUser._doc;
       res
         .header('Authorization', 'Bearer ' + token);
-        res.header('Access-Control-Expose-Headers', 'Authorization')
+      res.header('Access-Control-Expose-Headers', 'Authorization')
         .status(200)
         .json(rest);
     } else {
@@ -148,6 +148,7 @@ router.post("/google", async (req, res, next) => {
       const newUser = new User({
         name,
         email,
+        photo,
         password: hashedPassword,
       });
       await newUser.save();
