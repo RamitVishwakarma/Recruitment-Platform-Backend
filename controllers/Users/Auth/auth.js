@@ -136,7 +136,8 @@ router.post("/google", async (req, res, next) => {
       });
       const { password: pass, ...rest } = validUser._doc;
       res
-        .header('Authorization', 'Bearer ' + token)
+        .header('Authorization', 'Bearer ' + token);
+        res.header('Access-Control-Expose-Headers', 'Authorization')
         .status(200)
         .json(rest);
     } else {
