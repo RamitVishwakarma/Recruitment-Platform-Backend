@@ -417,7 +417,7 @@ router.post('/forget-password', async (req, res) => {
 // Route for handling password reset
 router.put('/reset_password/:token', async (req, res, next) => {
   try {
-    const { email, newPassword, confirmPassword } = req.body;
+    const { newPassword, confirmPassword } = req.body;
     const resetToken = req.params.token;
 
     // Hash the reset token to match the stored hash
@@ -425,7 +425,6 @@ router.put('/reset_password/:token', async (req, res, next) => {
 
     // Find the user with the matching email and reset token
     const user = await User.findOne({
-      email,
       resetPasswordToken,
       resetPasswordExpires: { $gt: Date.now() },
     });
