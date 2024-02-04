@@ -306,6 +306,78 @@ router.get('/shortlistedUsers', async (req, res) => {
   }
 });
 
+// Starmarking user
+router.put('/Starmark/:id', async (req, res) => {
+  try {
+
+    // Admin Access Required
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+
+    // Check if the logged-in user is an admin
+    const adminId = req.user._id;
+    const admin = await Admin.findById(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+
+    // Get the user ID from the request parameters
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+
+    // Update the 'shortlisted' field to true
+    Starmarked = req.body.Starmark;                                           // sending 0 / 1 {true/false}
+    // Save the updated user
+    let Updateuser = await User.findByIdAndUpdate(userId, {
+      StarMark: Starmarked
+    }, {
+      new: true
+    })
+    const { password, ...others } = Updateuser._doc;
+
+    // res.status(200).json({ success: true, message: "User shortlisted successfully" });
+    res.status(200).json({ success: true, message: `user account verified set to ${ShortListed}`, result: others });
+    // console.log(Updateuser)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error shortlisting user" });
+  }
+});
+
+
+
+// list of all Starmarked users of its Domain
+router.get('/StarmarkedUsers', async (req, res) => {
+  try {
+    // Admin Access Required
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
+    }
+
+    const adminId = req.user._id;
+    const admin = await Admin.findById(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+    const domain = admin.domain;
+    // Fetch all shortlisted users
+    const shortlistedUsers = await User.find({ domain: domain, StarMark: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
+
+    res.status(200).json({ success: true, shortlistedUsers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error retrieving shortlisted users" });
+  }
+});
 
 
 // to get statistics

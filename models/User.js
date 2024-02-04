@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please provide a name'],
-    // minlength: [3, 'Name must be at least 3 characters long'],
+    minlength: [3, 'Name must be at least 3 characters long'],
   },
   email: {
     type: String,
@@ -81,6 +81,11 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: false
     },
+  },
+  StarMark: {
+    type: Boolean,
+    required: false,
+    default: false
   },
   ShortList: {
     type: Boolean,
