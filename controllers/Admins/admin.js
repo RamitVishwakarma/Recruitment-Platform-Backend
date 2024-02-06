@@ -334,10 +334,10 @@ router.put('/Starmark/:id', async (req, res) => {
 
 
     // Update the 'shortlisted' field to true
-    Starmarked = req.body.Starmark;                                           // sending 0 / 1 {true/false}
+    Starmarked = req.body.starMark;                                           // sending 0 / 1 {true/false}
     // Save the updated user
     let Updateuser = await User.findByIdAndUpdate(userId, {
-      StarMark: Starmarked
+      starMark: Starmarked
     }, {
       new: true
     })
@@ -370,7 +370,7 @@ router.get('/StarmarkedUsers', async (req, res) => {
     }
     const domain = admin.domain;
     // Fetch all shortlisted users
-    const shortlistedUsers = await User.find({ domain: domain, StarMark: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
+    const shortlistedUsers = await User.find({ domain: domain, starMark: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
 
     res.status(200).json({ success: true, shortlistedUsers });
   } catch (error) {

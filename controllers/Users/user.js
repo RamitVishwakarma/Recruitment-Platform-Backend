@@ -88,7 +88,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
                 phoneNumber: req.body.phoneNumber,
                 photo: uploadedFile,
                 year: req.body.year,
-                domain: req.body.Domain,
+                domain: req.body.domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
             }, { new: true , select: '-password'});
@@ -107,7 +107,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
                 name: req.body.name,
                 phoneNumber: req.body.phoneNumber,
                 year: req.body.year,
-                domain: req.body.Domain,
+                domain: req.body.domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
             }, { new: true , select: '-password'});

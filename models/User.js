@@ -69,11 +69,11 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: false
     },
-    Leetcode: {
+    leetcode: {
       type: String,
       required: false
     },
-    Dribble: {
+    dribble: {
       type: String,
       required: false
     },
@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
       required: false
     },
   },
-  StarMark: {
+  starMark: {
     type: Boolean,
     required: false,
     default: false
