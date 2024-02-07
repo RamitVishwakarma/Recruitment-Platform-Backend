@@ -1,5 +1,6 @@
 const express = require('express');
 const QuizModel = require('../../models/Quiz');
+const AdminModel = require('../../models/Admin');
 const router = express.Router();
 
 
@@ -24,6 +25,22 @@ router.post('/createQuiz', async (req, res) => {
         });
 
         const savedQuiz = await newQuiz.save();
+
+        // Get the admin ID 
+        const adminId = req.user._id;
+
+         // Find the admin based on the admin ID
+         const admin = await AdminModel.findById(adminId);
+
+         if (!admin) {
+             return res.status(404).json({ success: false, message: "Admin not found" });
+         }
+ 
+         // Add the created quiz ID to the admin's createdQuizzes array
+         admin.createdQuizzes.push({quizId:savedQuiz._id});
+         await admin.save();
+
+
         res.status(201).json(savedQuiz);
     } catch (error) {
         console.error(error);

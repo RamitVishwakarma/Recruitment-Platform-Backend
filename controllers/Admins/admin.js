@@ -270,8 +270,13 @@ router.put('/shortlistUser/:id', async (req, res) => {
     })
     const { password, ...others } = Updateuser._doc;
 
+
+    // Add user ID to the admin's shortlisted users
+    admin.shortlistedUsers.push({ userId });
+    await admin.save();
+
     // res.status(200).json({ success: true, message: "User shortlisted successfully" });
-    res.status(200).json({ success: true, message: `user account verified set to ${ShortListed}`, result: others });
+    res.status(200).json({ success: true, message: `user is sortlisted and set to ${ShortListed}`, result: others });
     // console.log(Updateuser)
   } catch (error) {
     console.error(error);
