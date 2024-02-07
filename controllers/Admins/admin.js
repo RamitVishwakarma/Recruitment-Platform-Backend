@@ -312,7 +312,7 @@ router.get('/shortlistedUsers', async (req, res) => {
 });
 
 // Starmarking user
-router.put('/Starmark/:id', async (req, res) => {
+router.put('/reviewmark/:id', async (req, res) => {
   try {
 
     // Admin Access Required
@@ -339,17 +339,17 @@ router.put('/Starmark/:id', async (req, res) => {
 
 
     // Update the 'shortlisted' field to true
-    Starmarked = req.body.starMark;                                           // sending 0 / 1 {true/false}
+    reviewMarked = req.body.reviewMark;                                           // sending 0 / 1 {true/false}
     // Save the updated user
     let Updateuser = await User.findByIdAndUpdate(userId, {
-      starMark: Starmarked
+      reviewStatus: reviewMarked
     }, {
       new: true
     })
     const { password, ...others } = Updateuser._doc;
 
     // res.status(200).json({ success: true, message: "User shortlisted successfully" });
-    res.status(200).json({ success: true, message: `user account verified set to ${ShortListed}`, result: others });
+    res.status(200).json({ success: true, message: `user is marked for further review`, result: others });
     // console.log(Updateuser)
   } catch (error) {
     console.error(error);
@@ -360,7 +360,7 @@ router.put('/Starmark/:id', async (req, res) => {
 
 
 // list of all Starmarked users of its Domain
-router.get('/StarmarkedUsers', async (req, res) => {
+router.get('/reviewmarkedUsers', async (req, res) => {
   try {
     // Admin Access Required
     if (!req.user.isAdmin) {
@@ -375,9 +375,9 @@ router.get('/StarmarkedUsers', async (req, res) => {
     }
     const domain = admin.domain;
     // Fetch all shortlisted users
-    const shortlistedUsers = await User.find({ domain: domain, starMark: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
+    const reviewmarkedUsers = await User.find({ domain: domain, reviewStatus: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
 
-    res.status(200).json({ success: true, shortlistedUsers });
+    res.status(200).json({ success: true,message: "List of sortlisted user's", reviewmarkedUsers });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving shortlisted users" });

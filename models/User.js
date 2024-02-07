@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
       required: false
     },
   },
-  starMark: {
+  reviewStatus: {
     type: Boolean,
     required: false,
     default: false
