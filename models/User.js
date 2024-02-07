@@ -94,7 +94,7 @@ const userSchema = new mongoose.Schema({
   },
   interviewStatus: {
     type: Boolean,
-    required: false,
+    required: false,  // cleared (true)
     default: false
   },
   projectStatus: {

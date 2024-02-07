@@ -35,20 +35,14 @@ const adminSchema = new mongoose.Schema({
   },
   domain: {
     type: String,
-    required: false, 
+    required: false,
     enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   isSuperAdmin: {
     type: Boolean,
     default: true,
   },
-  createdQuizzes: [{
-    quizId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Quiz',
-    },
-  }],
-  shortlistedUsers: [{
+  interviewCleared: [{
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
