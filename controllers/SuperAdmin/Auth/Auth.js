@@ -9,7 +9,7 @@ const tokenBlacklist = new Set();
 // admins will be created by the super admin
 router.post("/signup", async (req, res, next) => {
   try {
-    const { name, email, password, domain } = req.body;
+    const { name, email, password } = req.body;
 
     // Validate email 
     if (!validator.isEmail(email)) {
