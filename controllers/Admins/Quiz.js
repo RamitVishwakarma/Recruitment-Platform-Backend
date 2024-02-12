@@ -9,7 +9,7 @@ const router = express.Router();
 // API to create a new quiz
 router.post('/createQuiz', async (req, res) => {
     try {
-        const {title, domain, questions, duration } = req.body;
+        const {title, domain, year, questions, duration } = req.body;
 
         // Admin Access Required
         if (!req.user.isAdmin) {
@@ -20,6 +20,7 @@ router.post('/createQuiz', async (req, res) => {
         const newQuiz = new QuizModel({
             title,
             domain,
+            year,
             questions,
             duration: duration || 30, // Set a default duration if not provided
         });

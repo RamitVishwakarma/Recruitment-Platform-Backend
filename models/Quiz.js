@@ -40,6 +40,10 @@ const quizSchema = new mongoose.Schema({
     type: String,   // web, programmin ...
     required: false,
   },
+  year: {           // year wise quiz created
+    type: String,   // web, programmin ...
+    required: false,
+  },
   questions: [questionSchema], // Change here to accept an array of questions
   duration: {
     type: Number,
@@ -50,3 +54,6 @@ const quizSchema = new mongoose.Schema({
 const QuizModel = mongoose.model('Quiz', quizSchema);
 
 module.exports = QuizModel;
+
+
+// todo: add year 1/2 to the schema
