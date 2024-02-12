@@ -62,7 +62,7 @@ router.get('/quizzesByDomain/:domain', async (req, res, next) => {
 
 
 
-// showAll quizzes Domain wise
+// showAll quizzes Domain&year wise
 router.get('/quizzesByDomain&year/:domain/:year', async (req, res, next) => {
     try {
         const userDomain = req.params.domain; // Assuming domain is passed in the query parameters
