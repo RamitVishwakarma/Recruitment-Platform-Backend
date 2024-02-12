@@ -61,6 +61,28 @@ router.get('/quizzesByDomain/:domain', async (req, res, next) => {
 });
 
 
+
+// showAll quizzes Domain wise
+router.get('/quizzesByDomain&year/:domain/:year', async (req, res, next) => {
+    try {
+        const userDomain = req.params.domain; // Assuming domain is passed in the query parameters
+        const useryear = req.params.year; // Assuming domain is passed in the query parameters
+
+        // Fetch quizzes based on the specified user domain
+        const quizzes = await QuizModel.find({ domain: userDomain, year: useryear });
+
+        if (!quizzes || quizzes.length === 0) {
+            return res.status(404).json({ message: `No quizzes available for the specified domain: ${userDomain} and year: ${useryear}` });
+        }
+
+        res.json({ quizzes });
+    } catch (error) {
+        next(error);
+
+    }
+});
+
+
 // Endpoint to get a paginated list of questions with full details including options
 router.get('/showQuestions', async (req, res, next) => {
     try {
