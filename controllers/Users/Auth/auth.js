@@ -361,6 +361,15 @@ router.post('/forget-password', async (req, res) => {
       // Save the user document with reset token information
       await user.save();
 
+      // Set a timeout to clear the token after 15 minutes
+      setTimeout(async () => {
+        if (user.resetPasswordToken) {
+          user.resetPasswordToken = undefined;
+          user.resetPasswordExpires = undefined;
+          await user.save();
+        }
+      }, 15 * 60 * 1000);
+
       const link = `${req.protocol}://localhost:3000/api/user/auth/reset_password/${resetToken}`;
 
       // Send reset instructions via email
