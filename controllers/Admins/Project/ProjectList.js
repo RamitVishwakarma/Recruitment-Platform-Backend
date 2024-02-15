@@ -109,6 +109,7 @@ router.get('/export-to-excel', async (req, res) => {
         const domain = admin.domain;
 
         const users = await User.find({ domain: domain }).lean();
+        // const users = await User.find().lean();
 
         const projectSubmissions = await ProjectSubmission.find({
             userId: { $in: users.map(user => user._id) }, // Filter submissions by users from the specified domain
@@ -119,25 +120,36 @@ router.get('/export-to-excel', async (req, res) => {
         const worksheet = workbook.addWorksheet('UserDetailsAndSubmissions');
 
         // Define headers for the Excel sheet
-        worksheet.addRow(['User ID', 'Name', 'Email', 'year', 'Domain', 'Submission ID', 'Submission Link']);
+        // worksheet.addRow(['User ID', 'Name', 'Email','phoneNumber', 'year','admissionNumber', 'Domain', 'Submission ID', 'Submission Link']);
+        worksheet.addRow(['Name', 'Email', 'phoneNumber', 'year', 'admissionNumber', 'Domain', 'Submission Link']);
 
-        // Populate Excel sheet
-        users.forEach((user) => {
-            projectSubmissions
-                .filter((submission) => submission.userId._id.toString() === user._id.toString())
-                .forEach((submission) => {
-                    worksheet.addRow([
-                        user._id,
-                        user.name,
-                        user.email,
-                        user.year,
-                        user.domain,
-                        submission._id,
-                        submission.submissionLink
-                    ]);
+       // Set column widths
+       worksheet.columns = [
+        { header: 'Name', key: 'name', width: 20 },
+        { header: 'Email', key: 'email', width: 30 },
+        { header: 'Phone Number', key: 'phoneNumber', width: 15 },
+        { header: 'Year', key: 'year', width: 10 },
+        { header: 'Admission No.', key: 'admissionNumber', width: 15 },
+        { header: 'Domain', key: 'domain', width: 15 },
+        { header: 'Submission Link', key: 'submissionLink', width: 50 }
+    ];
+
+    // Populate Excel sheet
+    users.forEach((user) => {
+        projectSubmissions
+            .filter((submission) => submission.userId._id.toString() === user._id.toString())
+            .forEach((submission) => {
+                worksheet.addRow({
+                    name: user.name,
+                    email: user.email,
+                    phoneNumber: user.phoneNumber,
+                    year: user.year,
+                    admissionNumber: user.admissionNumber,
+                    domain: user.domain,
+                    submissionLink: submission.submissionLink
                 });
-        });
-
+            });
+    });
         // Set headers and response type 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=UserDetailsAndSubmissions.xlsx');
@@ -151,6 +163,7 @@ router.get('/export-to-excel', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to export data to Excel' });
     }
 });
+
 
 
 module.exports = router;

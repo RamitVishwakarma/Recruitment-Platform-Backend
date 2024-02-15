@@ -97,7 +97,7 @@ router.get('/listUsers', async (req, res) => {
     const domain = admin.domain;
 
     // Fetch users based on the admin's domain
-    const userList = await User.find({ domain });
+    const userList = await User.find({ domain: domain });
 
     // // Extract user IDs for project submission query
     // const userIds = userList.map(user => user._id);
@@ -377,7 +377,7 @@ router.get('/reviewmarkedUsers', async (req, res) => {
     // Fetch all shortlisted users
     const reviewmarkedUsers = await User.find({ domain: domain, reviewStatus: true }).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
 
-    res.status(200).json({ success: true,message: "List of sortlisted user's", reviewmarkedUsers });
+    res.status(200).json({ success: true, message: "List of sortlisted user's", reviewmarkedUsers });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving shortlisted users" });
