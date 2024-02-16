@@ -401,8 +401,9 @@ router.get('/statistics', async (req, res) => {
 
     const domain = admin.domain;
     // number of submitted projects
-    const submittedProject = await ProjectSubmission.find({}).populate({ path: "userId", select: "name Domain" });
+    const submittedProject = await ProjectSubmission.find({}).populate({ path: "userId", select: "name domain" });
     const submittedProjectsCount = submittedProject.filter(project => project.userId.domain === domain).length;
+
     // console.log('Submitted Projects Count:', submittedProjectsCount);
     // console.log(submittedProject)
 
