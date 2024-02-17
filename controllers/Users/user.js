@@ -91,7 +91,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
                 domain: req.body.domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
-            }, { new: true , select: '-password'});
+            }, { new: true, select: '-password' });
 
             if (updatedUser) {
                 res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
@@ -110,7 +110,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
                 domain: req.body.domain,
                 admissionNumber: req.body.admissionNumber,
                 socialLinks: req.body.socialLinks
-            }, { new: true , select: '-password'});
+            }, { new: true, select: '-password' });
 
             if (updatedUser) {
                 res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
@@ -131,8 +131,12 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
 router.put("/Updateresume", resume.single('resume'), async (req, res) => {
     try {
 
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "File not present" });
+        }
+
         const file = req.file.path
-        // console.log(file);
+        console.log(file);
 
         // Uploading file to Cloudinary
         const cloudinaryUpload = await Upload.uploadFile(file, 'ResumeImages');
@@ -149,7 +153,7 @@ router.put("/Updateresume", resume.single('resume'), async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(id, {
             resume: uploadedFile,
 
-        }, { new: true , select: '-password'});
+        }, { new: true, select: '-password' });
 
         if (updatedUser) {
             res.status(200).json({ success: true, message: "User Resume updated successfully", user: updatedUser });

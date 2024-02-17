@@ -50,7 +50,8 @@ const userSchema = new mongoose.Schema({
   },
   resume: {
     type: String,
-    required: false
+    required: false,
+    default: "https://i.postimg.cc/pTq7XH1y/d35ee5d3eec5fef6c7d0c899ef224365.jpg"     // default demo resume
   },
   socialLinks: {
     github: {
