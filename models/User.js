@@ -121,6 +121,24 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+
+// Middleware to automatically clear resetPasswordToken and resetPasswordExpires after 15 minutes
+userSchema.statics.clearResetTokenAfterTimeout = function(token, callback) {
+  const time = 15 * 60 * 1000; // 15 minutes in milliseconds
+  const clearToken = () => {
+    this.findOneAndUpdate(
+      { resetPasswordToken: token },
+      { $unset: { resetPasswordToken: 1, resetPasswordExpires: 1 } },
+      { new: true },
+      callback
+    );
+  };
+
+  // Set timeout to clear the token after 15 minutes
+  setTimeout(clearToken, time);
+};
+
+
 const UserModel = mongoose.model('User', userSchema);
 
 module.exports = UserModel;
