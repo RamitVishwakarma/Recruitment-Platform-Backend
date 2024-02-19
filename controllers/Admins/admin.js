@@ -282,24 +282,7 @@ router.put('/shortlistUser/:id', async (req, res) => {
       new: true
     })
 
-
     // const { password, ...others } = Updateuser._doc;
-
-
-    // // Toggle the 'ShortList' field
-    // user.ShortList = !user.ShortList;
-    // await user.save();
-
-    // // Update the admin's shortlisted users list accordingly
-    // if (user.ShortList) {
-    //   // If user is shortlisted, add user ID to the admin's shortlisted users
-    //   admin.shortlistedUsers.push(userId);
-    // } else {
-    //   // If user is not shortlisted, remove user ID from the admin's shortlisted users
-    //   admin.shortlistedUsers = admin.shortlistedUsers.filter(id => id.toString() !== userId);
-    // }
-    // await admin.save();
-
 
      // Update the admin's shortlisted users list accordingly
      if (ShortListed) {
@@ -318,7 +301,6 @@ router.put('/shortlistUser/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error shortlisting user" });
-
   }
 });
 
