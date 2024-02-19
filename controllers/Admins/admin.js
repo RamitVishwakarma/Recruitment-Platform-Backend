@@ -302,12 +302,16 @@ router.put('/shortlistUser/:id', async (req, res) => {
 
 
      // Update the admin's shortlisted users list accordingly
-    if (ShortListed == true ) {
-      // If user is shortlisted, add user ID to the admin's shortlisted users
+     // Update the admin's shortlisted users list accordingly
+     if (ShortListed) {
+      // If user is shortlisted and ShortListed is true, add user ID to the admin's shortlisted users
       if (!admin.shortlistedUsers.includes(userId)) {
         admin.shortlistedUsers.push(userId);
       }
-    } 
+    } else {
+      // If user is not shortlisted and ShortListed is false, remove user ID from the admin's shortlisted users
+      admin.shortlistedUsers = admin.shortlistedUsers.filter(id => id.toString() !== userId);
+    }
     // admin.shortlistedUsers.push({ userId });
     await admin.save();
 
@@ -375,17 +379,12 @@ router.put('/reviewmark/:id', async (req, res) => {
     }
 
 
-    // Update the 'shortlisted' field to true
-    reviewMarked = req.body.reviewMark;                                           // sending 0 / 1 {true/false}
-    // Save the updated user
-    let Updateuser = await User.findByIdAndUpdate(userId, {
-      reviewStatus: reviewMarked
-    }, {
-      new: true
-    })
-    // const { password, ...others } = Updateuser._doc;
+    // Update the 'reviewStatus' field
+    // const reviewMarked = req.body.reviewMark === "true"; // Convert string to boolean
+    // user.reviewStatus = reviewMarked;
+    user.reviewStatus = !user.reviewStatus;                 // review status true/false
+    await user.save();
 
-    // res.status(200).json({ success: true, message: "User shortlisted successfully" });
     res.status(200).json({ success: true, message: `user is marked for further review` });
     // console.log(Updateuser)
   } catch (error) {
