@@ -48,7 +48,7 @@ router.put("/Updateprofile", upload.single('photo'), async (req, res) => {
         photo: UploadedFile,
         phoneNumber: req.body.phoneNumber,
         domain: req.body.domain
-      }, { new: true, select: '-password'});
+      }, { new: true, select: '-password' });
 
       if (updatedUser) {
         res.status(200).json({ success: true, message: "User profile updated successfully", user: updatedUser });
@@ -135,20 +135,33 @@ router.get('/search', async (req, res) => {
     if (!req.user.isAdmin) {
       return res.status(403).json({ success: false, message: 'Permission denied. Admin access required.' });
     }
+
+    const adminId = req.user._id;
+    const admin = await Admin.findById(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: 'Admin not found' });
+    }
+
+    const domain = admin.domain;
+
     const { name } = req.query;
-    const queryObject = {}
+    const queryObject = {
+      domain: domain // Only search for users with the same domain as the admin
+    };
 
     if (name) {
-      queryObject.name = { $regex: name, $options: 'i' }
+      queryObject.name = { $regex: name, $options: 'i' };
     }
-    const userList = await User.find(queryObject).select(' _id name year ShortList quizzesTaken projectStatus interviewStatus');
+
+    const userList = await User.find(queryObject).select('_id name year ShortList quizzesTaken projectStatus interviewStatus');
     res.status(200).json(userList);
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error retrieving user list" });
   }
+});
 
-})
 
 
 
