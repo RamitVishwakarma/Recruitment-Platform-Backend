@@ -375,10 +375,10 @@ router.put('/reviewmark/:id', async (req, res) => {
     }, {
       new: true
     })
-    const { password, ...others } = Updateuser._doc;
+    // const { password, ...others } = Updateuser._doc;
 
     // res.status(200).json({ success: true, message: "User shortlisted successfully" });
-    res.status(200).json({ success: true, message: `user is marked for further review`, result: others });
+    res.status(200).json({ success: true, message: `user is marked for further review` });
     // console.log(Updateuser)
   } catch (error) {
     console.error(error);
