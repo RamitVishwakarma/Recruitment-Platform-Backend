@@ -271,7 +271,7 @@ router.put('/shortlistUser/:id', async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
-    
+
     // Update the 'shortlisted' field to true
     ShortListed = req.body.ShortList;
     // Save the updated user
@@ -283,17 +283,17 @@ router.put('/shortlistUser/:id', async (req, res) => {
 
     // const { password, ...others } = Updateuser._doc;
 
-    // Update the admin's shortlisted users list accordingly
+    // Update the admin's shortlisted users 
     if (ShortListed) {
-      // If user is shortlisted and ShortListed is true, add user ID to the admin's shortlisted users
+      // If user is shortlisted and ShortListed is true
       if (!admin.shortlistedUsers.includes(userId)) {
+        // If user ID is not already in the admin's shortlisted users list
         admin.shortlistedUsers.push(userId);
-        await admin.save();
+        await admin.save(); // Save admin after adding the user ID
       }
-    } else {
-      // If user is not shortlisted and ShortListed is false, remove user ID from the admin's shortlisted users
-      admin.shortlistedUsers = admin.shortlistedUsers.filter(id => id.toString() !== userId);
     }
+
+
     // res.status(200).json({ success: true, message: `user is sortlisted and set to ${ShortListed}`, result: others });
     res.status(200).json({ success: true, message: `user is sortlisted and set to ${ShortListed}` });
     // console.log(Updateuser)
