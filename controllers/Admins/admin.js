@@ -276,7 +276,7 @@ router.put('/shortlistUser/:id', async (req, res) => {
     // Update the 'shortlisted' field to true
     ShortListed = req.body.ShortList;
     // Save the updated user
-    let Updateuser = await User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(userId, {
       ShortList: ShortListed
     }, {
       new: true
@@ -302,14 +302,12 @@ router.put('/shortlistUser/:id', async (req, res) => {
 
 
      // Update the admin's shortlisted users list accordingly
-     // Update the admin's shortlisted users list accordingly
      if (ShortListed) {
       // If user is shortlisted and ShortListed is true, add user ID to the admin's shortlisted users
       if (!admin.shortlistedUsers.includes(userId)) {
         admin.shortlistedUsers.push(userId);
       }
     } else {
-      // If user is not shortlisted and ShortListed is false, remove user ID from the admin's shortlisted users
       admin.shortlistedUsers = admin.shortlistedUsers.filter(id => id.toString() !== userId);
     }
     // admin.shortlistedUsers.push({ userId });
@@ -322,7 +320,7 @@ router.put('/shortlistUser/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error shortlisting user" });
-    
+
   }
 });
 
