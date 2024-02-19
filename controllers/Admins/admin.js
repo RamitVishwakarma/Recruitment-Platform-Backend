@@ -322,6 +322,7 @@ router.put('/shortlistUser/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Error shortlisting user" });
+    
   }
 });
 
