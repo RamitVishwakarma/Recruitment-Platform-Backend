@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
   domain: {
     type: String,
     required: false,
-    enum: ['Programmming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
+    enum: ['Programming', 'Web Club', 'Android Club', 'Flutter Dev', 'Design Club', 'ML Club'],
   },
   year: {
     type: String,
