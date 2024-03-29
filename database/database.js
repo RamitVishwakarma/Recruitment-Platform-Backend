@@ -4,7 +4,9 @@ const dotenv=require("dotenv");
 dotenv.config();
 const connectdb=(DATABASE_URL)=>{
   
-    return mongoose.connect(DATABASE_URL).then((success)=>{
+    return mongoose.connect(DATABASE_URL,{
+        dbName: "Recruitment_Platform", 
+    }).then((success)=>{
         console.log("database connected!");
 
     }).catch((error)=>{
