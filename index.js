@@ -28,8 +28,25 @@ app.use(express.urlencoded({ extended: true }));
 //     credentials: true,
 //     allowedHeaders: ['Content-Type', 'Authorization'],
 // }));
+// app.use(cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true,
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+
+const allowedOrigins = ['http://localhost:5173', 'https://gdsc-recruitment-2024.vercel.app'];
+
+// Configure CORS middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+        // Check if the incoming origin is in the allowed origins list
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
