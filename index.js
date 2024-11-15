@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
   "http://localhost:5173",
   "https://gdsc-recruitment-2024.vercel.app",
-  "https://recplatform.ramitvishwakarma.in/",
+  "https://recplatform.ramitvishwakarma.in",
 ];
 
 // Configure CORS middleware
