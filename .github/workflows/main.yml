@@ -1,0 +1,52 @@
+name: Deploy to EC2 (Local Compose)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy repository contents to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: "ec2-user"
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./"
+          target: "~/recruitment-platform"
+
+      - name: Deploy application via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: "ec2-user"
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e # Exit immediately if a command exits with a non-zero status.
+            echo "Navigating to app directory on EC2: ~/recruitment-platform" # Changed path in echo
+            cd ~/recruitment-platform # Changed directory
+
+            echo "Building/Rebuilding services with Docker Compose..."
+            # This will build images for services defined in your docker-compose.yml
+            # using their respective Dockerfiles and build contexts.
+            # --no-cache ensures fresh builds if Dockerfiles or source changed.
+            docker-compose build --no-cache
+
+            echo "Stopping and removing old containers, their images, and volumes (for this project)..."
+            # --rmi all: Remove images used by services in this docker-compose.yml
+            # --volumes: Remove named volumes declared in this docker-compose.yml and used by its services
+            docker-compose down --rmi all --volumes || true 
+
+            echo "Starting new containers in detached mode..."
+            docker-compose up -d # Starts all services defined in docker-compose.yml in the background
+
+            echo "Cleaning up dangling Docker images globally..."
+            docker image prune -f
+
+            echo "Deployment to EC2 successful!"

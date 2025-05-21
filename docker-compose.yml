@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  recruitment_platform:
+    build:
+      context: ./recruitment-platform-backend # Path to this backend's source and Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Host port 8080 maps to container port 8080 (defined by ENV PORT in its Dockerfile)
+    environment:
+      # Environment variables specific to recruitment_platform
+      DATABASE_URL: ${DATABASE_URL_RECRUITMENT}
+      JWT_SECRET_USER: ${JWT_SECRET_USER_RECRUITMENT}
+      JWT_SECRET_ADMIN: ${JWT_SECRET_ADMIN_RECRUITMENT}
+      JWT_SECRET_SUPERADMIN: ${JWT_SECRET_SUPERADMIN_RECRUITMENT}
+      ZEPTOMAIL_BOUNCE_ADDRESS: ${ZEPTOMAIL_BOUNCE_ADDRESS_RECRUITMENT}
+      ZEPTOMAIL_TOKEN: ${ZEPTOMAIL_TOKEN_RECRUITMENT}
+      NODE_ENV: ${NODE_ENV:-production} # Default to production if not set
+      PORT: 8080 # Ensure this matches the EXPOSE and ENV PORT in its Dockerfile
+    volumes:
+      # Only mount source code if necessary for development; for production, code should be in the image.
+      # - ./recruitment-platform-backend:/usr/src/app
+      # - /usr/src/app/node_modules # Keep node_modules from the image
+    restart: unless-stopped
