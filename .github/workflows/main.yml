@@ -32,6 +32,20 @@ jobs:
             echo "Navigating to app directory on EC2: ~/recruitment-platform" # Changed path in echo
             cd ~/recruitment-platform # Changed directory
 
+            echo "Creating .env file on EC2..."
+            # Ensure these secrets are defined in your GitHub repository settings
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+            echo "JWT_SECRET_USER=${{ secrets.JWT_SECRET_USER }}" >> .env
+            echo "JWT_SECRET_ADMIN=${{ secrets.JWT_SECRET_ADMIN }}" >> .env
+            echo "JWT_SECRET_SUPERADMIN=${{ secrets.JWT_SECRET_SUPERADMIN }}" >> .env
+            echo "ZEPTOMAIL_USER=${{ secrets.ZEPTOMAIL_USER }}" >> .env
+            echo "ZEPTOMAIL_PASS=${{ secrets.ZEPTOMAIL_PASS }}" >> .env
+            echo "CLOUD_NAME=${{ secrets.CLOUD_NAME }}" >> .env
+            echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> .env
+            echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> .env
+            echo "NODE_ENV=production" >> .env # Set Node environment to production
+            echo "PORT=8080" >> .env # Set port
+
             echo "Building/Rebuilding services with Docker Compose..."
             # This will build images for services defined in your docker-compose.yml
             # using their respective Dockerfiles and build contexts.
