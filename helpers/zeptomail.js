@@ -3,14 +3,13 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   host: "smtp.zeptomail.in",
   port: 465,
-  secure: true, // true for 465
+  secure: true,
   auth: {
     user: process.env.ZEPTOMAIL_USER,
     pass: process.env.ZEPTOMAIL_PASS,
   },
 });
 
-// Function to send an email
 const sendEmail = async (
   toEmail,
   subject,
@@ -18,8 +17,6 @@ const sendEmail = async (
   fromName = "GDSC JSSATEN",
   titleName = "noreply-recplat.ramitvishwakarma.in"
 ) => {
-  // The 'from' address in mailOptions should ideally be a verified sender in ZeptoMail
-  // Often, this can be the same as the bounce address used for authentication
   const mailOptions = {
     from: `"${fromName}" <${titleName}>`,
     to: toEmail,
