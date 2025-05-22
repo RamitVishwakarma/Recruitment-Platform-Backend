@@ -6,7 +6,15 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
-  const value = err.errmsg.match(/(["'])(?:(?=(\\?))\2.)*?\1/)[0];
+  let value = "unknown";
+  if (err.keyValue) {
+    // Prefer keyValue if available (newer MongoDB versions)
+    const key = Object.keys(err.keyValue)[0];
+    value = `${key}: ${err.keyValue[key]}`;
+  } else if (err.errmsg && err.errmsg.match(/([\"'])(?:(?=(\\?))\2.)*?\1/)) {
+    // Fallback to errmsg regex
+    value = err.errmsg.match(/([\"'])(?:(?=(\\?))\2.)*?\1/)[0];
+  }
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);
 };

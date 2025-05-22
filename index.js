@@ -58,15 +58,15 @@ app.options("*", cors(corsOptions));
 const homeRoute = require("./routes/index.js");
 app.use("/", homeRoute);
 
-// Global error handling middleware - should be last middleware
-const globalErrorHandler = require("./utils/error");
-const AppError = require("./utils/appError");
-app.use(globalErrorHandler);
-
-// Handle 404 errors - this should be placed after all your routes and before the global error handler if you want to customize 404s specifically
+// Handle 404 errors - this should be placed AFTER all your routes and BEFORE the global error handler
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
+// Global error handling middleware - should be the LAST middleware
+const globalErrorHandler = require("./utils/error");
+const AppError = require("./utils/appError");
+app.use(globalErrorHandler);
 
 app.listen(PORT, (error) => {
   if (error) {
