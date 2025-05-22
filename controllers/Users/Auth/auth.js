@@ -241,6 +241,7 @@ router.post("/google", async (req, res, next) => {
       res.status(200).json(rest);
     }
   } catch (error) {
+    console.error("Error in Google auth:", error);
     next(error);
   }
 });
