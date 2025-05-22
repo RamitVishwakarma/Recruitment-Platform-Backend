@@ -58,24 +58,20 @@ app.options("*", cors(corsOptions));
 const homeRoute = require("./routes/index.js");
 app.use("/", homeRoute);
 
+// Global error handling middleware - should be last middleware
+const globalErrorHandler = require("./utils/error");
+const AppError = require("./utils/appError");
+app.use(globalErrorHandler);
+
+// Handle 404 errors - this should be placed after all your routes and before the global error handler if you want to customize 404s specifically
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
 app.listen(PORT, (error) => {
   if (error) {
     console.log("server not started");
   } else {
     console.log(`server running at http://localhost:${PORT}`);
   }
-});
-
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  const errorDetails =
-    process.env.NODE_ENV === "development" ? err.stack : null;
-
-  return res.status(statusCode).json({
-    success: false,
-    statusCode,
-    message,
-    error: errorDetails,
-  });
 });
