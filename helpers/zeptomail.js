@@ -15,10 +15,13 @@ const sendEmail = async (
   subject,
   htmlContent,
   fromName = "GDSC JSSATEN",
-  titleName = "noreply@recruitment-platform.ramitvishwakarma.in"
+  addressName = "noreply@recruitment-platform.ramitvishwakarma.in"
 ) => {
   const mailOptions = {
-    from: `"${fromName}" <${titleName}>`,
+    from: {
+      name: fromName,
+      address: addressName,
+    },
     to: toEmail,
     subject: subject,
     html: htmlContent,
