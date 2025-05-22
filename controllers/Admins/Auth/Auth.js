@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
         _id: validUser._id, // Corrected from 'user' to 'validUser'
         isAdmin: validUser.isAdmin,
       },
-      process.env.JWT_SECRETADMIN,
+      process.env.JWT_SECRET_ADMIN,
       {
         expiresIn: "3d",
       }

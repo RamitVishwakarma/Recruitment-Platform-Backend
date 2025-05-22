@@ -131,7 +131,7 @@ router.post("/google", async (req, res, next) => {
     if (validUser) {
       const token = jwt.sign(
         { _id: validUser._id },
-        process.env.JWT_SECRETUser,
+        process.env.JWT_SECRET_USER,
         {
           expiresIn: "3d",
         }
@@ -230,9 +230,13 @@ router.post("/google", async (req, res, next) => {
       `
       );
 
-      const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRETUSER, {
-        expiresIn: "3d",
-      });
+      const token = jwt.sign(
+        { _id: newUser._id },
+        process.env.JWT_SECRET_USER,
+        {
+          expiresIn: "3d",
+        }
+      );
       const { password: pass, ...rest } = newUser._doc;
 
       res.header("Authorization", "Bearer " + token);
@@ -270,9 +274,13 @@ router.post("/login", async (req, res, next) => {
     }
 
     // Generate JWT token for authentication
-    const token = jwt.sign({ _id: validUser._id }, process.env.JWT_SECRETUSER, {
-      expiresIn: "3d",
-    });
+    const token = jwt.sign(
+      { _id: validUser._id },
+      process.env.JWT_SECRET_USER,
+      {
+        expiresIn: "3d",
+      }
+    );
 
     // Remove password from the user data
     const { password: _, ...userData } = validUser._doc;

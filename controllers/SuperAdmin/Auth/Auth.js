@@ -73,7 +73,7 @@ router.post("/login", async (req, res) => {
         _id: validUser._id, // Corrected from 'user' to 'validUser'
         isAdmin: validUser.isAdmin,
       },
-      process.env.JWT_SECRETSUPERADMIN,
+      process.env.JWT_SECRET_SUPERADMIN,
       {
         expiresIn: "3d",
       }
