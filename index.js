@@ -8,6 +8,36 @@ dotenv.config();
 
 const PORT = process.env.PORT || 80;
 const app = express();
+
+// CORS Configuration
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://gdsc-recruitment-2024.vercel.app",
+  "https://recplatform.ramitvishwakarma.in",
+  "https://recruitment-platform.ramitvishwakarma.in",
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg =
+        "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+  ],
+};
+
 // database start
 const mongoose = require("mongoose");
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -19,40 +49,10 @@ app.use("/public", express.static("Uploads"));
 app.use(express.json());
 app.use(morgan("tiny")); //  morgan(':method :url :status :res[content-length] - :response-time ms')
 app.use(express.urlencoded({ extended: true }));
-// app.options('*', cors());
-// app.use(cors({exposedHeaders: ['Authorization']}));
-// app.use(cors({
-//     origin: '*',
-//     credentials: true,
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-// }));
-// app.use(cors({
-//     origin: 'http://localhost:5173',
-//     credentials: true,
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-// }));
+app.use(cors(corsOptions)); // Use the cors middleware with options);
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://gdsc-recruitment-2024.vercel.app",
-  "https://recplatform.ramitvishwakarma.in",
-];
-
-// Configure CORS middleware
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Check if the incoming origin is in the allowed origins list
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// Handle preflight requests for all routes
+app.options("*", cors(corsOptions));
 
 // using routes
 const homeRoute = require("./routes/index.js");
